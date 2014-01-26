@@ -10,3 +10,10 @@ INCLUDEPATH += . src
 # Input
 HEADERS += src/joddial.h
 SOURCES += src/joddial.cpp src/main.cpp
+
+# Output
+DESTDIR = build
+OBJECTS_DIR = build
+MOC_DIR = build
+RCC_DIR = build
+UI_DIR = build
