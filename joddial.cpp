@@ -31,7 +31,7 @@ Joddial::Joddial(QWidget * parent):
 	QString fontFamily = (this->font()).family();
 	titleLabel->setFont(QFont(fontFamily, 16, QFont::Bold));
 
-	logText = new QPlainTextEdit("");
+	outputText = new QPlainTextEdit("");
 
 	networkCombo = new QComboBox;
 	networkCombo->setEditable(true);
@@ -41,7 +41,7 @@ Joddial::Joddial(QWidget * parent):
 	/* Set layout */
 	QVBoxLayout * mainLayout = new QVBoxLayout;
 	mainLayout->addWidget(titleLabel);
-	mainLayout->addWidget(logText);
+	mainLayout->addWidget(outputText);
 	mainLayout->addWidget(networkCombo);
 	mainLayout->addWidget(connectButton);
 
@@ -51,13 +51,17 @@ Joddial::Joddial(QWidget * parent):
 	connect(wvdialProc, SIGNAL(readyReadStandardOutput()), this, SLOT(printLog()));
 
 	setLayout(mainLayout);
-	setWindowTitle("Modem Chaalo");
+	setWindowTitle("Joddial");
 
 	/* Initial location & size*/
 	resize(QSize(400,200));
 	move(QPoint(400,200));
 }
 
+/*
+ * Connect to network by starting wvdial process if process not running already
+ * Disconnect the process if it is already running
+ */
 void Joddial::connectDisconnect()
 {
 	if (wvdialProc->state() == QProcess::NotRunning)
@@ -71,6 +75,7 @@ void Joddial::connectDisconnect()
 		if (!args.at(0).isEmpty())
 		{
 			/* Connect to the network */
+			/* Merging stdout & stderr into a single channel */
 			wvdialProc->setProcessChannelMode(QProcess::MergedChannels);
 			wvdialProc->start(prog, args);
 			qDebug() << "Connection attempted";
@@ -91,10 +96,13 @@ void Joddial::connectDisconnect()
 	}
 }
 
-void Joddial::printLog()
+/*
+ * Print output in text box
+ */
+void Joddial::printOutput()
 {
-	QString log = wvdialProc->readAll();
-	logText->appendPlainText(log);
+	QString output = wvdialProc->readAll();
+	outputText->appendPlainText(output);
 }
 
 

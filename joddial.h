@@ -35,10 +35,10 @@ public:
 
 private slots:
 	void connectDisconnect();
-	void printLog();
+	void printOutput();
 
 private:
-	QPlainTextEdit * logText;
+	QPlainTextEdit * outputText;
 	QComboBox * networkCombo;
 	QPushButton * connectButton;
 
