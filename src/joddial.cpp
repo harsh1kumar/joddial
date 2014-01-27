@@ -27,7 +27,7 @@
 Joddial::Joddial(QWidget * parent):
 		QWidget(parent)
 {
-	QLabel * titleLabel = new QLabel("Joddial");
+	QLabel * titleLabel = new QLabel(tr("Joddial"));
 	QString fontFamily = (this->font()).family();
 	titleLabel->setFont(QFont(fontFamily, 16, QFont::Bold));
 
@@ -36,7 +36,7 @@ Joddial::Joddial(QWidget * parent):
 	networkCombo = new QComboBox;
 	networkCombo->setEditable(true);
 
-	connectButton = new QPushButton("&Connect");
+	connectButton = new QPushButton(tr("&Connect"));
 
 	/* Set layout */
 	QVBoxLayout * mainLayout = new QVBoxLayout;
@@ -51,7 +51,7 @@ Joddial::Joddial(QWidget * parent):
 	connect(wvdialProc, SIGNAL(readyReadStandardOutput()), this, SLOT(printLog()));
 
 	setLayout(mainLayout);
-	setWindowTitle("Joddial");
+	setWindowTitle(tr("Joddial"));
 
 	/* Initial location & size*/
 	resize(QSize(400,200));
@@ -79,11 +79,11 @@ void Joddial::connectDisconnect()
 			wvdialProc->setProcessChannelMode(QProcess::MergedChannels);
 			wvdialProc->start(prog, args);
 			qDebug() << "Connection attempted";
-			connectButton->setText("&Disconnect");
+			connectButton->setText(tr("&Disconnect"));
 		}
 		else
 		{
-			QMessageBox::information(this, "No Network", "Please enter a network name in the combo box.");
+			QMessageBox::information(this, tr("No Network"), tr("Please enter a network name in the combo box."));
 		}
 		
 	}
@@ -92,7 +92,7 @@ void Joddial::connectDisconnect()
 		/* Disconnect */
 		wvdialProc->terminate();
 		qDebug() << "Disconnection attempted";
-		connectButton->setText("&Connect");
+		connectButton->setText(tr("&Connect"));
 	}
 }
 
