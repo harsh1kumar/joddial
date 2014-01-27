@@ -24,6 +24,7 @@
 int main(int argc, char * argv[])
 {
 	QApplication app(argc, argv);
+	app.setWindowIcon(QIcon("Joddial.png")); /* Setting Icon for application */
 
 	Joddial j;
 	j.show();

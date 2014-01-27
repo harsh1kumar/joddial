@@ -23,6 +23,7 @@
 #include <QVBoxLayout>
 #include <QDebug>
 #include <QMessageBox>
+#include <QApplication>
 
 Joddial::Joddial(QWidget * parent):
 		QWidget(parent)
@@ -44,6 +45,8 @@ Joddial::Joddial(QWidget * parent):
 	mainLayout->addWidget(outputText);
 	mainLayout->addWidget(networkCombo);
 	mainLayout->addWidget(connectButton);
+
+	createSysTrayIcon();
 
 	wvdialProc = new QProcess(this);
 
@@ -105,4 +108,42 @@ void Joddial::printOutput()
 	outputText->appendPlainText(output);
 }
 
+/*
+ * Creates System Tray Icon with associated actions & menu
+ */
+void Joddial::createSysTrayIcon()
+{
+	/* Create Actions for System Tray Icon Menu */
+	restoreAct = new QAction(tr("&Restore"), this);
+	connect(restoreAct, SIGNAL(triggered()), this, SLOT(showNormal()));
 
+	quitAct = new QAction(tr("&Quit"), this);
+	connect(quitAct, SIGNAL(triggered()), qApp, SLOT(quit()));
+
+	/* Create System Tray Icon Menu */
+	sysTrayMenu = new QMenu(this);
+	sysTrayMenu->addAction(restoreAct);
+	sysTrayMenu->addAction(quitAct);
+
+	/* Create System Tray Icon*/
+	sysTrayIcon = new QSystemTrayIcon(this);
+	sysTrayIcon->setIcon(this->windowIcon()); /* Use the icon of parent */
+	sysTrayIcon->setContextMenu(sysTrayMenu);
+	sysTrayIcon->show();
+}
+/*
+ * Reimplemented Event Handler for Joddial's close event
+ *
+ * It hides the Joddial widget & ignores the close event, so that
+ * it seems that Joddial has minimized to system tray
+ */
+void Joddial::closeEvent(QCloseEvent *event)
+{
+	QMessageBox::information(this, tr("Joddial"),
+				tr("<center>Joddial is still running.<br>"
+				"To quit, right-click on system tray icon "
+				"& choose <b>Quit</b></center>"));
+
+	hide(); /* Hide Joddial Widget*/
+	event->ignore(); /* Ignore the close event */
+}

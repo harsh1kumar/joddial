@@ -25,6 +25,8 @@
 #include <QPlainTextEdit>
 #include <QProcess>
 #include <QComboBox>
+#include <QMenu>
+#include <QSystemTrayIcon>
 
 class Joddial : public QWidget
 {
@@ -38,11 +40,23 @@ private slots:
 	void printOutput();
 
 private:
+	/* Widgets */
 	QPlainTextEdit * outputText;
 	QComboBox * networkCombo;
 	QPushButton * connectButton;
 
+	/* wvdial Process */
 	QProcess * wvdialProc;
+
+	/* System Tray Icon */
+	QSystemTrayIcon * sysTrayIcon;
+	QMenu * sysTrayMenu;
+	QAction * restoreAct;
+	QAction * quitAct;
+
+	/* Private Functions */
+	void createSysTrayIcon();
+	void closeEvent(QCloseEvent *event);
 };
 
 #endif // JODDIAL_H
