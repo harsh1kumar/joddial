@@ -48,7 +48,7 @@ Joddial::Joddial(QWidget * parent):
 	wvdialProc = new QProcess(this);
 
 	connect(connectButton, SIGNAL(clicked()), this, SLOT(connectDisconnect()));
-	connect(wvdialProc, SIGNAL(readyReadStandardOutput()), this, SLOT(printLog()));
+	connect(wvdialProc, SIGNAL(readyReadStandardOutput()), this, SLOT(printOutput()));
 
 	setLayout(mainLayout);
 	setWindowTitle(tr("Joddial"));
