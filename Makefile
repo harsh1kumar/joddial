@@ -46,9 +46,11 @@ OBJECTS_DIR   = build/
 ####### Files
 
 SOURCES       = src/joddial.cpp \
-		src/main.cpp build/moc_joddial.cpp
+		src/main.cpp build/qrc_joddial.cpp \
+		build/moc_joddial.cpp
 OBJECTS       = build/joddial.o \
 		build/main.o \
+		build/qrc_joddial.o \
 		build/moc_joddial.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/shell-unix.conf \
@@ -129,6 +131,7 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/yacc.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
 		joddial.pro \
+		joddial.qrc \
 		joddial.pro
 QMAKE_TARGET  = joddial
 DESTDIR       = build/#avoid trailing-slash linebreak
@@ -242,6 +245,7 @@ Makefile: joddial.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspe
 		/usr/lib/qt/mkspecs/features/yacc.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
 		joddial.pro \
+		joddial.qrc \
 		/lib/libQt5Widgets.prl \
 		/lib/libQt5Gui.prl \
 		/lib/libQt5Core.prl
@@ -325,6 +329,7 @@ Makefile: joddial.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mkspe
 /usr/lib/qt/mkspecs/features/yacc.prf:
 /usr/lib/qt/mkspecs/features/lex.prf:
 joddial.pro:
+joddial.qrc:
 /lib/libQt5Widgets.prl:
 /lib/libQt5Gui.prl:
 /lib/libQt5Core.prl:
@@ -335,7 +340,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d build/joddial1.0.0 || mkdir -p build/joddial1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) build/joddial1.0.0/ && $(COPY_FILE) --parents src/joddial.h build/joddial1.0.0/ && $(COPY_FILE) --parents src/joddial.cpp src/main.cpp build/joddial1.0.0/ && (cd `dirname build/joddial1.0.0` && $(TAR) joddial1.0.0.tar joddial1.0.0 && $(COMPRESS) joddial1.0.0.tar) && $(MOVE) `dirname build/joddial1.0.0`/joddial1.0.0.tar.gz . && $(DEL_FILE) -r build/joddial1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) build/joddial1.0.0/ && $(COPY_FILE) --parents joddial.qrc build/joddial1.0.0/ && $(COPY_FILE) --parents src/joddial.h build/joddial1.0.0/ && $(COPY_FILE) --parents src/joddial.cpp src/main.cpp build/joddial1.0.0/ && (cd `dirname build/joddial1.0.0` && $(TAR) joddial1.0.0.tar joddial1.0.0 && $(COMPRESS) joddial1.0.0.tar) && $(MOVE) `dirname build/joddial1.0.0`/joddial1.0.0.tar.gz . && $(DEL_FILE) -r build/joddial1.0.0
 
 
 clean:compiler_clean 
@@ -356,8 +361,13 @@ mocables: compiler_moc_header_make_all compiler_moc_source_make_all
 
 check: first
 
-compiler_rcc_make_all:
+compiler_rcc_make_all: build/qrc_joddial.cpp
 compiler_rcc_clean:
+	-$(DEL_FILE) build/qrc_joddial.cpp
+build/qrc_joddial.cpp: joddial.qrc \
+		Joddial.png
+	/usr/lib/qt/bin/rcc -name joddial joddial.qrc -o build/qrc_joddial.cpp
+
 compiler_moc_header_make_all: build/moc_joddial.cpp
 compiler_moc_header_clean:
 	-$(DEL_FILE) build/moc_joddial.cpp
@@ -504,6 +514,12 @@ build/moc_joddial.cpp: /usr/include/qt/QtWidgets/QWidget \
 		/usr/include/qt/QtWidgets/qtabwidget.h \
 		/usr/include/qt/QtWidgets/qrubberband.h \
 		/usr/include/qt/QtCore/qabstractitemmodel.h \
+		/usr/include/qt/QtWidgets/QMenu \
+		/usr/include/qt/QtWidgets/qmenu.h \
+		/usr/include/qt/QtWidgets/qaction.h \
+		/usr/include/qt/QtWidgets/qactiongroup.h \
+		/usr/include/qt/QtWidgets/QSystemTrayIcon \
+		/usr/include/qt/QtWidgets/qsystemtrayicon.h \
 		src/joddial.h
 	/usr/lib/qt/bin/moc $(DEFINES) $(INCPATH) -I/usr/lib/gcc/include/c++/4.8.2 -I/usr/lib/gcc/include/c++/4.8.2/i686-pc-linux-gnu -I/usr/lib/gcc/include/c++/4.8.2/backward -I/usr/lib/gcc/i686-pc-linux-gnu/4.8.2/include -I/usr/local/include -I/usr/lib/gcc/i686-pc-linux-gnu/4.8.2/include-fixed -I/usr/include src/joddial.h -o build/moc_joddial.cpp
 
@@ -517,7 +533,7 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_moc_header_clean 
+compiler_clean: compiler_rcc_clean compiler_moc_header_clean 
 
 ####### Compile
 
@@ -665,6 +681,12 @@ build/joddial.o: src/joddial.cpp src/joddial.h \
 		/usr/include/qt/QtWidgets/qtabwidget.h \
 		/usr/include/qt/QtWidgets/qrubberband.h \
 		/usr/include/qt/QtCore/qabstractitemmodel.h \
+		/usr/include/qt/QtWidgets/QMenu \
+		/usr/include/qt/QtWidgets/qmenu.h \
+		/usr/include/qt/QtWidgets/qaction.h \
+		/usr/include/qt/QtWidgets/qactiongroup.h \
+		/usr/include/qt/QtWidgets/QSystemTrayIcon \
+		/usr/include/qt/QtWidgets/qsystemtrayicon.h \
 		/usr/include/qt/QtWidgets/QLabel \
 		/usr/include/qt/QtWidgets/qlabel.h \
 		/usr/include/qt/QtWidgets/QVBoxLayout \
@@ -675,7 +697,14 @@ build/joddial.o: src/joddial.cpp src/joddial.h \
 		/usr/include/qt/QtCore/QDebug \
 		/usr/include/qt/QtWidgets/QMessageBox \
 		/usr/include/qt/QtWidgets/qmessagebox.h \
-		/usr/include/qt/QtWidgets/qdialog.h
+		/usr/include/qt/QtWidgets/qdialog.h \
+		/usr/include/qt/QtWidgets/QApplication \
+		/usr/include/qt/QtWidgets/qapplication.h \
+		/usr/include/qt/QtCore/qcoreapplication.h \
+		/usr/include/qt/QtCore/qeventloop.h \
+		/usr/include/qt/QtWidgets/qdesktopwidget.h \
+		/usr/include/qt/QtGui/qguiapplication.h \
+		/usr/include/qt/QtGui/qinputmethod.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/joddial.o src/joddial.cpp
 
 build/main.o: src/main.cpp src/joddial.h \
@@ -822,6 +851,12 @@ build/main.o: src/main.cpp src/joddial.h \
 		/usr/include/qt/QtWidgets/qtabwidget.h \
 		/usr/include/qt/QtWidgets/qrubberband.h \
 		/usr/include/qt/QtCore/qabstractitemmodel.h \
+		/usr/include/qt/QtWidgets/QMenu \
+		/usr/include/qt/QtWidgets/qmenu.h \
+		/usr/include/qt/QtWidgets/qaction.h \
+		/usr/include/qt/QtWidgets/qactiongroup.h \
+		/usr/include/qt/QtWidgets/QSystemTrayIcon \
+		/usr/include/qt/QtWidgets/qsystemtrayicon.h \
 		/usr/include/qt/QtWidgets/QApplication \
 		/usr/include/qt/QtWidgets/qapplication.h \
 		/usr/include/qt/QtCore/qcoreapplication.h \
@@ -830,6 +865,9 @@ build/main.o: src/main.cpp src/joddial.h \
 		/usr/include/qt/QtGui/qguiapplication.h \
 		/usr/include/qt/QtGui/qinputmethod.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/main.o src/main.cpp
+
+build/qrc_joddial.o: build/qrc_joddial.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/qrc_joddial.o build/qrc_joddial.cpp
 
 build/moc_joddial.o: build/moc_joddial.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_joddial.o build/moc_joddial.cpp
