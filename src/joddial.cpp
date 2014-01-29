@@ -33,6 +33,7 @@ Joddial::Joddial(QWidget * parent):
 	titleLabel->setFont(QFont(fontFamily, 16, QFont::Bold));
 
 	outputText = new QPlainTextEdit("");
+	outputText->setReadOnly(true);
 
 	networkCombo = new QComboBox;
 	networkCombo->setEditable(true);
