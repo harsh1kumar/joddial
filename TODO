@@ -1,6 +1,6 @@
 * wvdial <name> : automate finding of name
 * ussd feature
 * limit log in textbox
-* Minimize to system tray
 * Messagebox to have checkbox to prevent it from appearing again
 * Save settings
+* remove debug lines
