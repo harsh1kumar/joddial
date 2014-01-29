@@ -115,7 +115,7 @@ void Joddial::createSysTrayIcon()
 {
 	/* Create Actions for System Tray Icon Menu */
 	restoreAct = new QAction(tr("&Restore"), this);
-	connect(restoreAct, SIGNAL(triggered()), this, SLOT(showNormal()));
+	connect(restoreAct, SIGNAL(triggered()), this, SLOT(show()));
 
 	quitAct = new QAction(tr("&Quit"), this);
 	connect(quitAct, SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -130,6 +130,9 @@ void Joddial::createSysTrayIcon()
 	sysTrayIcon->setIcon(this->windowIcon()); /* Use the icon of parent */
 	sysTrayIcon->setContextMenu(sysTrayMenu);
 	sysTrayIcon->show();
+
+	connect(sysTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), 
+		this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
 }
 /*
  * Reimplemented Event Handler for Joddial's close event
@@ -147,3 +150,20 @@ void Joddial::closeEvent(QCloseEvent *event)
 	hide(); /* Hide Joddial Widget*/
 	event->ignore(); /* Ignore the close event */
 }
+
+/*
+ * Behaviour of tray icon when it is double clicked
+ * 	If Joddial is visible, hide it
+ * 	If Joddial is hidden, show it.
+ */
+void Joddial::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+	if (reason == QSystemTrayIcon::DoubleClick)
+	{
+		if (this->isVisible())
+			hide();
+		else
+			show();
+	}
+}
+
