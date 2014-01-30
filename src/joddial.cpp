@@ -40,27 +40,72 @@ Joddial::Joddial(QWidget * parent):
 
 	connectButton = new QPushButton(tr("&Connect"));
 
+	wvdialProc = new QProcess(this);
+
 	/* Set layout */
 	QVBoxLayout * mainLayout = new QVBoxLayout;
 	mainLayout->addWidget(titleLabel);
 	mainLayout->addWidget(outputText);
 	mainLayout->addWidget(networkCombo);
 	mainLayout->addWidget(connectButton);
+	setLayout(mainLayout);
 
 	createSysTrayIcon();
 
-	wvdialProc = new QProcess(this);
-
-	connect(connectButton, SIGNAL(clicked()), this, SLOT(connectDisconnect()));
-	connect(wvdialProc, SIGNAL(readyReadStandardOutput()), this, SLOT(printOutput()));
-
-	setLayout(mainLayout);
 	setWindowTitle(tr("Joddial"));
 
 	/* Initial location & size*/
 	resize(QSize(400,200));
 	move(QPoint(400,200));
+
+	connect(connectButton, SIGNAL(clicked()), this, SLOT(connectDisconnect()));
+	connect(wvdialProc, SIGNAL(readyReadStandardOutput()), this, SLOT(printOutput()));
 }
+
+/*
+ * Creates System Tray Icon with associated actions & menu
+ */
+void Joddial::createSysTrayIcon()
+{
+	/* Create Actions for System Tray Icon Menu */
+	restoreAct = new QAction(tr("&Restore"), this);
+	connect(restoreAct, SIGNAL(triggered()), this, SLOT(show()));
+
+	quitAct = new QAction(tr("&Quit"), this);
+	connect(quitAct, SIGNAL(triggered()), qApp, SLOT(quit()));
+
+	/* Create System Tray Icon Menu */
+	sysTrayMenu = new QMenu(this);
+	sysTrayMenu->addAction(restoreAct);
+	sysTrayMenu->addAction(quitAct);
+
+	/* Create System Tray Icon*/
+	sysTrayIcon = new QSystemTrayIcon(this);
+	sysTrayIcon->setIcon(this->windowIcon()); /* Use the icon of parent */
+	sysTrayIcon->setContextMenu(sysTrayMenu);
+	sysTrayIcon->show();
+
+	connect(sysTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), 
+		this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
+}
+
+/*
+ * Reimplemented Event Handler for Joddial's close event
+ *
+ * It hides the Joddial widget & ignores the close event, so that
+ * it seems that Joddial has minimized to system tray
+ */
+void Joddial::closeEvent(QCloseEvent *event)
+{
+	QMessageBox::information(this, tr("Joddial"),
+				tr("<center>Joddial is still running.<br>"
+				"To quit, right-click on system tray icon "
+				"& choose <b>Quit</b></center>"));
+
+	hide(); /* Hide Joddial Widget*/
+	event->ignore(); /* Ignore the close event */
+}
+
 
 /*
  * Connect to network by starting wvdial process if process not running already
@@ -107,49 +152,6 @@ void Joddial::printOutput()
 {
 	QString output = wvdialProc->readAll();
 	outputText->appendPlainText(output);
-}
-
-/*
- * Creates System Tray Icon with associated actions & menu
- */
-void Joddial::createSysTrayIcon()
-{
-	/* Create Actions for System Tray Icon Menu */
-	restoreAct = new QAction(tr("&Restore"), this);
-	connect(restoreAct, SIGNAL(triggered()), this, SLOT(show()));
-
-	quitAct = new QAction(tr("&Quit"), this);
-	connect(quitAct, SIGNAL(triggered()), qApp, SLOT(quit()));
-
-	/* Create System Tray Icon Menu */
-	sysTrayMenu = new QMenu(this);
-	sysTrayMenu->addAction(restoreAct);
-	sysTrayMenu->addAction(quitAct);
-
-	/* Create System Tray Icon*/
-	sysTrayIcon = new QSystemTrayIcon(this);
-	sysTrayIcon->setIcon(this->windowIcon()); /* Use the icon of parent */
-	sysTrayIcon->setContextMenu(sysTrayMenu);
-	sysTrayIcon->show();
-
-	connect(sysTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), 
-		this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
-}
-/*
- * Reimplemented Event Handler for Joddial's close event
- *
- * It hides the Joddial widget & ignores the close event, so that
- * it seems that Joddial has minimized to system tray
- */
-void Joddial::closeEvent(QCloseEvent *event)
-{
-	QMessageBox::information(this, tr("Joddial"),
-				tr("<center>Joddial is still running.<br>"
-				"To quit, right-click on system tray icon "
-				"& choose <b>Quit</b></center>"));
-
-	hide(); /* Hide Joddial Widget*/
-	event->ignore(); /* Ignore the close event */
 }
 
 /*
