@@ -25,6 +25,7 @@
 #include <QMessageBox>
 #include <QApplication>
 #include <QSettings>
+#include <QCheckBox>
 
 Joddial::Joddial(QWidget * parent):
 		QWidget(parent)
@@ -96,10 +97,22 @@ void Joddial::createSysTrayIcon()
  */
 void Joddial::closeEvent(QCloseEvent *event)
 {
-	QMessageBox::information(this, tr("Joddial"),
-				tr("<center>Joddial is still running.<br>"
-				"To quit, right-click on system tray icon "
-				"& choose <b>Quit</b></center>"));
+	if (showMsgOnHide)
+	{
+		QMessageBox msgBox;
+		msgBox.setIcon(QMessageBox::Information);
+		msgBox.setText(tr("Joddial is still running."));
+		msgBox.setInformativeText(tr("To quit, right-click on system tray icon "
+					"& choose <b>Quit</b>"));
+		msgBox.setWindowTitle("Joddial");
+
+		QCheckBox * chkBox = new QCheckBox("Do not show this again");
+		msgBox.setCheckBox(chkBox);
+		msgBox.exec();
+
+		if (chkBox->checkState() == Qt::Checked)
+			showMsgOnHide = false;
+	}
 
 	hide(); /* Hide Joddial Widget*/
 	event->ignore(); /* Ignore the close event */
@@ -182,6 +195,7 @@ void Joddial::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
  * Settings read are:
  * 	Size
  * 	Point/Position
+ * 	showMsgOnHide - Show messageBox when minimizing to system tray or not
  */
 void Joddial::readSettings()
 {
@@ -189,6 +203,7 @@ void Joddial::readSettings()
 
 	QSize size = settings.value("size", QSize(400,200)).toSize();
 	QPoint pos = settings.value("pos", QPoint(400,200)).toPoint();
+	showMsgOnHide = settings.value("showMsgOnHide", true).toBool(); //By default, message box will be displayed
 	resize(size);
 	move(pos);
 }
@@ -201,4 +216,6 @@ void Joddial::writeSettings()
 	QSettings settings("joddial", "joddial");
 	settings.setValue("size", size());
 	settings.setValue("pos", pos());
+	settings.setValue("showMsgOnHide", showMsgOnHide);
 }
+

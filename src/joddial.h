@@ -61,6 +61,9 @@ private:
 	void closeEvent(QCloseEvent *event);
 	void readSettings();
 	void writeSettings();
+
+	/* Private variables*/
+	bool showMsgOnHide;
 };
 
 #endif // JODDIAL_H
