@@ -24,6 +24,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QApplication>
+#include <QSettings>
 
 Joddial::Joddial(QWidget * parent):
 		QWidget(parent)
@@ -54,9 +55,7 @@ Joddial::Joddial(QWidget * parent):
 
 	setWindowTitle(tr("Joddial"));
 
-	/* Initial location & size*/
-	resize(QSize(400,200));
-	move(QPoint(400,200));
+	readSettings();
 
 	connect(connectButton, SIGNAL(clicked()), this, SLOT(connectDisconnect()));
 	connect(wvdialProc, SIGNAL(readyReadStandardOutput()), this, SLOT(printOutput()));
@@ -72,7 +71,7 @@ void Joddial::createSysTrayIcon()
 	connect(restoreAct, SIGNAL(triggered()), this, SLOT(show()));
 
 	quitAct = new QAction(tr("&Quit"), this);
-	connect(quitAct, SIGNAL(triggered()), qApp, SLOT(quit()));
+	connect(quitAct, SIGNAL(triggered()), this, SLOT(saveAndQuit()));
 
 	/* Create System Tray Icon Menu */
 	sysTrayMenu = new QMenu(this);
@@ -106,6 +105,14 @@ void Joddial::closeEvent(QCloseEvent *event)
 	event->ignore(); /* Ignore the close event */
 }
 
+/*
+ * Write settings & quit Joddial
+ */
+void Joddial::saveAndQuit()
+{
+	writeSettings();
+	qApp->quit();
+}
 
 /*
  * Connect to network by starting wvdial process if process not running already
@@ -170,3 +177,28 @@ void Joddial::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 	}
 }
 
+/*
+ * Read settings from config file or load default value.
+ * Settings read are:
+ * 	Size
+ * 	Point/Position
+ */
+void Joddial::readSettings()
+{
+	QSettings settings("joddial", "joddial");
+
+	QSize size = settings.value("size", QSize(400,200)).toSize();
+	QPoint pos = settings.value("pos", QPoint(400,200)).toPoint();
+	resize(size);
+	move(pos);
+}
+
+/*
+ * Write settings to config file
+ */
+void Joddial::writeSettings()
+{
+	QSettings settings("joddial", "joddial");
+	settings.setValue("size", size());
+	settings.setValue("pos", pos());
+}

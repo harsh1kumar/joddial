@@ -38,6 +38,7 @@ public:
 private slots:
 	void connectDisconnect();
 	void printOutput();
+	void saveAndQuit();
 	void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
 
 private:
@@ -58,6 +59,8 @@ private:
 	/* Private Functions */
 	void createSysTrayIcon();
 	void closeEvent(QCloseEvent *event);
+	void readSettings();
+	void writeSettings();
 };
 
 #endif // JODDIAL_H
