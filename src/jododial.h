@@ -1,24 +1,24 @@
 /*
  * Copyright (C) 2014 Harsh Kumar <harsh1kumar@gmail.com>
  *
- * This file is part of Joddial.
+ * This file is part of Jododial.
  *
- * Joddial is free software: you can redistribute it and/or modify
+ * Jododial is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * Joddial is distributed in the hope that it will be useful,
+ * Jododial is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Joddial.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Jododial.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef JODDIAL_H
-#define JODDIAL_H
+#ifndef JODODIAL_H
+#define JODODIAL_H
 
 #include <QWidget>
 #include <QPushButton>
@@ -28,12 +28,12 @@
 #include <QMenu>
 #include <QSystemTrayIcon>
 
-class Joddial : public QWidget
+class Jododial : public QWidget
 {
 	Q_OBJECT
 
 public:
-	Joddial(QWidget * parent=0);
+	Jododial(QWidget * parent=0);
 
 private slots:
 	void connectDisconnect();
@@ -66,4 +66,4 @@ private:
 	bool showMsgOnHide;
 };
 
-#endif // JODDIAL_H
+#endif // JODODIAL_H

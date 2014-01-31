@@ -4,13 +4,13 @@
 
 QT += widgets
 TEMPLATE = app
-TARGET = joddial
+TARGET = jododial
 INCLUDEPATH += . src
 
 # Input
-HEADERS += src/joddial.h
-SOURCES += src/joddial.cpp src/main.cpp
-RESOURCES += joddial.qrc
+HEADERS += src/jododial.h
+SOURCES += src/jododial.cpp src/main.cpp
+RESOURCES += jododial.qrc
 
 # Output
 DESTDIR = build

@@ -1,23 +1,23 @@
 /*
  * Copyright (C) 2014 Harsh Kumar <harsh1kumar@gmail.com>
  *
- * This file is part of Joddial.
+ * This file is part of Jododial.
  *
- * Joddial is free software: you can redistribute it and/or modify
+ * Jododial is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * Joddial is distributed in the hope that it will be useful,
+ * Jododial is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Joddial.  If not, see <http://www.gnu.org/licenses/>.
+ * along with Jododial.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "joddial.h"
+#include "jododial.h"
 
 #include <QLabel>
 #include <QVBoxLayout>
@@ -27,10 +27,10 @@
 #include <QSettings>
 #include <QCheckBox>
 
-Joddial::Joddial(QWidget * parent):
+Jododial::Jododial(QWidget * parent):
 		QWidget(parent)
 {
-	QLabel * titleLabel = new QLabel(tr("Joddial"));
+	QLabel * titleLabel = new QLabel(tr("Jododial"));
 	QString fontFamily = (this->font()).family();
 	titleLabel->setFont(QFont(fontFamily, 16, QFont::Bold));
 
@@ -54,7 +54,7 @@ Joddial::Joddial(QWidget * parent):
 
 	createSysTrayIcon();
 
-	setWindowTitle(tr("Joddial"));
+	setWindowTitle(tr("Jododial"));
 
 	readSettings();
 
@@ -65,7 +65,7 @@ Joddial::Joddial(QWidget * parent):
 /*
  * Creates System Tray Icon with associated actions & menu
  */
-void Joddial::createSysTrayIcon()
+void Jododial::createSysTrayIcon()
 {
 	/* Create Actions for System Tray Icon Menu */
 	restoreAct = new QAction(tr("&Restore"), this);
@@ -90,21 +90,21 @@ void Joddial::createSysTrayIcon()
 }
 
 /*
- * Reimplemented Event Handler for Joddial's close event
+ * Reimplemented Event Handler for Jododial's close event
  *
- * It hides the Joddial widget & ignores the close event, so that
- * it seems that Joddial has minimized to system tray
+ * It hides the Jododial widget & ignores the close event, so that
+ * it seems that Jododial has minimized to system tray
  */
-void Joddial::closeEvent(QCloseEvent *event)
+void Jododial::closeEvent(QCloseEvent *event)
 {
 	if (showMsgOnHide)
 	{
 		QMessageBox msgBox;
 		msgBox.setIcon(QMessageBox::Information);
-		msgBox.setText(tr("Joddial is still running."));
+		msgBox.setText(tr("Jododial is still running."));
 		msgBox.setInformativeText(tr("To quit, right-click on system tray icon "
 					"& choose <b>Quit</b>"));
-		msgBox.setWindowTitle("Joddial");
+		msgBox.setWindowTitle("Jododial");
 
 		QCheckBox * chkBox = new QCheckBox("Do not show this again");
 		msgBox.setCheckBox(chkBox);
@@ -114,14 +114,14 @@ void Joddial::closeEvent(QCloseEvent *event)
 			showMsgOnHide = false;
 	}
 
-	hide(); /* Hide Joddial Widget*/
+	hide(); /* Hide Jododial Widget*/
 	event->ignore(); /* Ignore the close event */
 }
 
 /*
- * Write settings & quit Joddial
+ * Write settings & quit Jododial
  */
-void Joddial::saveAndQuit()
+void Jododial::saveAndQuit()
 {
 	writeSettings();
 	qApp->quit();
@@ -131,7 +131,7 @@ void Joddial::saveAndQuit()
  * Connect to network by starting wvdial process if process not running already
  * Disconnect the process if it is already running
  */
-void Joddial::connectDisconnect()
+void Jododial::connectDisconnect()
 {
 	if (wvdialProc->state() == QProcess::NotRunning)
 	{
@@ -168,7 +168,7 @@ void Joddial::connectDisconnect()
 /*
  * Print output in text box
  */
-void Joddial::printOutput()
+void Jododial::printOutput()
 {
 	QString output = wvdialProc->readAll();
 	outputText->appendPlainText(output);
@@ -176,10 +176,10 @@ void Joddial::printOutput()
 
 /*
  * Behaviour of tray icon when it is double clicked
- * 	If Joddial is visible, hide it
- * 	If Joddial is hidden, show it.
+ * 	If Jododial is visible, hide it
+ * 	If Jododial is hidden, show it.
  */
-void Joddial::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
+void Jododial::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
 	if (reason == QSystemTrayIcon::DoubleClick)
 	{
@@ -197,9 +197,9 @@ void Joddial::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
  * 	Point/Position
  * 	showMsgOnHide - Show messageBox when minimizing to system tray or not
  */
-void Joddial::readSettings()
+void Jododial::readSettings()
 {
-	QSettings settings("joddial", "joddial");
+	QSettings settings("jododial", "jododial");
 
 	QSize size = settings.value("size", QSize(400,200)).toSize();
 	QPoint pos = settings.value("pos", QPoint(400,200)).toPoint();
@@ -211,9 +211,9 @@ void Joddial::readSettings()
 /*
  * Write settings to config file
  */
-void Joddial::writeSettings()
+void Jododial::writeSettings()
 {
-	QSettings settings("joddial", "joddial");
+	QSettings settings("jododial", "jododial");
 	settings.setValue("size", size());
 	settings.setValue("pos", pos());
 	settings.setValue("showMsgOnHide", showMsgOnHide);
