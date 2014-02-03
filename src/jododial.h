@@ -61,6 +61,7 @@ private:
 	void closeEvent(QCloseEvent *event);
 	void readSettings();
 	void writeSettings();
+	void findNetworks();
 
 	/* Private variables*/
 	bool showMsgOnHide;

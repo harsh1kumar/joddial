@@ -53,6 +53,7 @@ Jododial::Jododial(QWidget * parent):
 	setLayout(mainLayout);
 
 	createSysTrayIcon();
+	findNetworks();
 
 	setWindowTitle(tr("Jododial"));
 
@@ -87,6 +88,48 @@ void Jododial::createSysTrayIcon()
 
 	connect(sysTrayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), 
 		this, SLOT(trayIconActivated(QSystemTrayIcon::ActivationReason)));
+}
+
+/*
+ * Find the networks which have been configured in wvdial.conf &
+ * put them in the combo box
+ */
+void Jododial::findNetworks()
+{
+	QFile configFile("/etc/wvdial.conf");
+	if (!configFile.open(QIODevice::ReadOnly | QIODevice::Text))
+	{
+		QMessageBox::warning(this, "Warning",
+				"<center>Unable to open \"/etc/wvdial.conf\" for reading.<br>"
+				"Combo Box will be empty</center>");
+		return;
+	}
+
+	QTextStream in(&configFile);
+	QString line = in.readLine();
+	while (!line.isNull())
+	{
+		line = line.trimmed(); // Remove any leading or trailing white spaces
+		if (!line.startsWith(";"))
+		{
+			// Line is not commented
+			if (line.contains("Dialer") && line.startsWith("[") && line.endsWith("]"))
+			{
+				// A line with network name found
+				line.remove("Dialer");
+				line.remove(0,1); // Remove leading '['
+				line.chop(1); // Remove trailing ']'
+				line = line.trimmed(); // Remove any leading or trailing white spaces
+
+				// 'line' now has a network name
+				// Insert the network name in the Combo Box
+				networkCombo->insertItem(0, line);
+			}
+		}
+		// Read next line
+		line = in.readLine();
+	}
+	configFile.close();
 }
 
 /*
