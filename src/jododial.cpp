@@ -239,6 +239,7 @@ void Jododial::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
  * 	Size
  * 	Point/Position
  * 	showMsgOnHide - Show messageBox when minimizing to system tray or not
+ * 	network - Current network in combo box
  */
 void Jododial::readSettings()
 {
@@ -246,9 +247,19 @@ void Jododial::readSettings()
 
 	QSize size = settings.value("size", QSize(400,200)).toSize();
 	QPoint pos = settings.value("pos", QPoint(400,200)).toPoint();
-	showMsgOnHide = settings.value("showMsgOnHide", true).toBool(); //By default, message box will be displayed
 	resize(size);
 	move(pos);
+
+	showMsgOnHide = settings.value("showMsgOnHide", true).toBool(); //By default, message box will be displayed
+
+	// Try to set network in combo box to the saved value
+	QString network = settings.value("network", "").toString();
+	int index = networkCombo->findText(network);
+	if (index != -1)
+	{
+		// Network available in combo box
+		networkCombo->setCurrentIndex(index);
+	}
 }
 
 /*
@@ -260,5 +271,6 @@ void Jododial::writeSettings()
 	settings.setValue("size", size());
 	settings.setValue("pos", pos());
 	settings.setValue("showMsgOnHide", showMsgOnHide);
+	settings.setValue("network", networkCombo->currentText());
 }
 
