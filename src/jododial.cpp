@@ -21,11 +21,11 @@
 
 #include <QLabel>
 #include <QVBoxLayout>
-#include <QDebug>
 #include <QMessageBox>
 #include <QApplication>
 #include <QSettings>
 #include <QCheckBox>
+#include <QTextStream>
 
 Jododial::Jododial(QWidget * parent):
 		QWidget(parent)
@@ -190,7 +190,6 @@ void Jododial::connectDisconnect()
 			/* Merging stdout & stderr into a single channel */
 			wvdialProc->setProcessChannelMode(QProcess::MergedChannels);
 			wvdialProc->start(prog, args);
-			qDebug() << "Connection attempted";
 			connectButton->setText(tr("&Disconnect"));
 		}
 		else
@@ -203,7 +202,6 @@ void Jododial::connectDisconnect()
 	{
 		/* Disconnect */
 		wvdialProc->terminate();
-		qDebug() << "Disconnection attempted";
 		connectButton->setText(tr("&Connect"));
 	}
 }

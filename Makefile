@@ -694,7 +694,6 @@ build/jododial.o: src/jododial.cpp src/jododial.h \
 		/usr/include/qt/QtWidgets/qlayout.h \
 		/usr/include/qt/QtWidgets/qlayoutitem.h \
 		/usr/include/qt/QtWidgets/qgridlayout.h \
-		/usr/include/qt/QtCore/QDebug \
 		/usr/include/qt/QtWidgets/QMessageBox \
 		/usr/include/qt/QtWidgets/qmessagebox.h \
 		/usr/include/qt/QtWidgets/qdialog.h \
@@ -708,7 +707,8 @@ build/jododial.o: src/jododial.cpp src/jododial.h \
 		/usr/include/qt/QtCore/QSettings \
 		/usr/include/qt/QtCore/qsettings.h \
 		/usr/include/qt/QtWidgets/QCheckBox \
-		/usr/include/qt/QtWidgets/qcheckbox.h
+		/usr/include/qt/QtWidgets/qcheckbox.h \
+		/usr/include/qt/QtCore/QTextStream
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/jododial.o src/jododial.cpp
 
 build/main.o: src/main.cpp src/jododial.h \
