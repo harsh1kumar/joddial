@@ -47,7 +47,7 @@ OBJECTS_DIR   = build/obj/
 
 SOURCES       = src/ussd_handler.cpp \
 		src/jododial.cpp \
-		src/main.cpp qrc_jododial.cpp \
+		src/main.cpp build/rcc/qrc_jododial.cpp \
 		build/moc/moc_ussd_handler.cpp \
 		build/moc/moc_jododial.cpp
 OBJECTS       = build/obj/ussd_handler.o \
@@ -376,12 +376,12 @@ mocables: compiler_moc_header_make_all compiler_moc_source_make_all
 
 check: first
 
-compiler_rcc_make_all: qrc_jododial.cpp
+compiler_rcc_make_all: build/rcc/qrc_jododial.cpp
 compiler_rcc_clean:
-	-$(DEL_FILE) qrc_jododial.cpp
-qrc_jododial.cpp: jododial.qrc \
+	-$(DEL_FILE) build/rcc/qrc_jododial.cpp
+build/rcc/qrc_jododial.cpp: jododial.qrc \
 		Jododial.png
-	/usr/lib/qt/bin/rcc -name jododial jododial.qrc -o qrc_jododial.cpp
+	/usr/lib/qt/bin/rcc -name jododial jododial.qrc -o build/rcc/qrc_jododial.cpp
 
 compiler_moc_header_make_all: build/moc/moc_ussd_handler.cpp build/moc/moc_jododial.cpp
 compiler_moc_header_clean:
@@ -1174,8 +1174,8 @@ build/obj/main.o: src/main.cpp src/jododial.h \
 		/usr/include/qt/QtGui/qinputmethod.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/main.o src/main.cpp
 
-build/obj/qrc_jododial.o: qrc_jododial.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/qrc_jododial.o qrc_jododial.cpp
+build/obj/qrc_jododial.o: build/rcc/qrc_jododial.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/qrc_jododial.o build/rcc/qrc_jododial.cpp
 
 build/obj/moc_ussd_handler.o: build/moc/moc_ussd_handler.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/moc_ussd_handler.o build/moc/moc_ussd_handler.cpp

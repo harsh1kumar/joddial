@@ -16,6 +16,6 @@ RESOURCES += jododial.qrc
 DESTDIR = build
 OBJECTS_DIR = build/obj
 MOC_DIR = build/moc
+RCC_DIR = build/rcc
 # These may be required in the future
-# RCC_DIR = build/rcc
 # UI_DIR = build/ui
