@@ -28,6 +28,8 @@
 #include <QCheckBox>
 #include <QTextStream>
 
+#include "ussd_handler.h"
+
 Jododial::Jododial(QWidget * parent):
 		QWidget(parent)
 {
@@ -45,9 +47,19 @@ Jododial::Jododial(QWidget * parent):
 	networkCombo->setEditable(true);
 	connectButton = new QPushButton(tr("&Connect"));
 	QHBoxLayout * networkLayout = new QHBoxLayout;
-	networkLayout->addWidget(networkLabel);
-	networkLayout->addWidget(networkCombo);
-	networkLayout->addWidget(connectButton);
+	networkLayout->addWidget(networkLabel, 1);
+	networkLayout->addWidget(networkCombo, 1);
+	networkLayout->addWidget(connectButton, 1);
+
+	/* USSD row widgets */
+	QLabel * ussdCmdLabel = new QLabel(tr("USSD Command :"));
+	ussdCmdLabel->setAlignment(Qt::AlignCenter);
+	ussdCmdEdit = new QLineEdit;
+	sendUssdButton = new QPushButton(tr("&Send"));
+	QHBoxLayout * ussdLayout = new QHBoxLayout;
+	ussdLayout->addWidget(ussdCmdLabel, 1);
+	ussdLayout->addWidget(ussdCmdEdit, 1);
+	ussdLayout->addWidget(sendUssdButton, 1);
 
 	wvdialProc = new QProcess(this);
 
@@ -56,6 +68,7 @@ Jododial::Jododial(QWidget * parent):
 	mainLayout->addWidget(titleLabel);
 	mainLayout->addWidget(outputText);
 	mainLayout->addLayout(networkLayout);
+	mainLayout->addLayout(ussdLayout);
 	setLayout(mainLayout);
 
 	createSysTrayIcon();
@@ -66,6 +79,7 @@ Jododial::Jododial(QWidget * parent):
 	readSettings();
 
 	connect(connectButton, SIGNAL(clicked()), this, SLOT(connectDisconnect()));
+	connect(sendUssdButton, SIGNAL(clicked()), this, SLOT(sendUssd()));
 	connect(wvdialProc, SIGNAL(readyReadStandardOutput()), this, SLOT(printOutput()));
 }
 
@@ -277,3 +291,17 @@ void Jododial::writeSettings()
 	settings.setValue("showMsgOnHide", showMsgOnHide);
 	settings.setValue("network", networkCombo->currentText());
 }
+
+/*
+ * Send USSD command & print the reply
+ */
+void Jododial::sendUssd()
+{
+	QString ussdCommand = ussdCmdEdit->text();
+
+	UssdHandler u;
+	QString reply = u.sendCmd(ussdCommand);
+
+	outputText->appendPlainText(reply + "\n");
+}
+

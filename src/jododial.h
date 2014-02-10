@@ -23,8 +23,9 @@
 #include <QWidget>
 #include <QPushButton>
 #include <QPlainTextEdit>
-#include <QProcess>
 #include <QComboBox>
+#include <QLineEdit>
+#include <QProcess>
 #include <QMenu>
 #include <QSystemTrayIcon>
 
@@ -37,6 +38,7 @@ public:
 
 private slots:
 	void connectDisconnect();
+	void sendUssd();
 	void printOutput();
 	void saveAndQuit();
 	void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
@@ -46,6 +48,8 @@ private:
 	QPlainTextEdit * outputText;
 	QComboBox * networkCombo;
 	QPushButton * connectButton;
+	QPushButton * sendUssdButton;
+	QLineEdit * ussdCmdEdit;
 
 	/* wvdial Process */
 	QProcess * wvdialProc;

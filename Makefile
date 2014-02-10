@@ -12,13 +12,13 @@ MAKEFILE      = Makefile
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_DBUS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -march=i686 -mtune=generic -O2 -pipe -fstack-protector --param=ssp-buffer-size=4 -Wall -W -D_REENTRANT -fPIE $(DEFINES)
 CXXFLAGS      = -pipe -march=i686 -mtune=generic -O2 -pipe -fstack-protector --param=ssp-buffer-size=4 -Wall -W -D_REENTRANT -fPIE $(DEFINES)
-INCPATH       = -I/usr/lib/qt/mkspecs/linux-g++ -I. -I. -Isrc -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -Ibuild
+INCPATH       = -I/usr/lib/qt/mkspecs/linux-g++ -I. -I. -Isrc -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtDBus -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -Ibuild/moc
 LINK          = g++
 LFLAGS        = -Wl,-O1,--sort-common,--as-needed,-z,relro -Wl,-O1
-LIBS          = $(SUBLIBS) -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -lQt5Widgets -lQt5DBus -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /usr/lib/qt/bin/qmake
@@ -41,17 +41,21 @@ MKDIR         = mkdir -p
 
 ####### Output directory
 
-OBJECTS_DIR   = build/
+OBJECTS_DIR   = build/obj/
 
 ####### Files
 
-SOURCES       = src/jododial.cpp \
-		src/main.cpp build/qrc_jododial.cpp \
-		build/moc_jododial.cpp
-OBJECTS       = build/jododial.o \
-		build/main.o \
-		build/qrc_jododial.o \
-		build/moc_jododial.o
+SOURCES       = src/ussd_handler.cpp \
+		src/jododial.cpp \
+		src/main.cpp qrc_jododial.cpp \
+		build/moc/moc_ussd_handler.cpp \
+		build/moc/moc_jododial.cpp
+OBJECTS       = build/obj/ussd_handler.o \
+		build/obj/jododial.o \
+		build/obj/main.o \
+		build/obj/qrc_jododial.o \
+		build/obj/moc_ussd_handler.o \
+		build/obj/moc_jododial.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/shell-unix.conf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
@@ -124,6 +128,9 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/resources.prf \
 		/usr/lib/qt/mkspecs/features/moc.prf \
 		/usr/lib/qt/mkspecs/features/unix/opengl.prf \
+		/usr/lib/qt/mkspecs/features/dbuscommon.pri \
+		/usr/lib/qt/mkspecs/features/dbusinterfaces.prf \
+		/usr/lib/qt/mkspecs/features/dbusadaptors.prf \
 		/usr/lib/qt/mkspecs/features/uic.prf \
 		/usr/lib/qt/mkspecs/features/unix/thread.prf \
 		/usr/lib/qt/mkspecs/features/testcase_targets.prf \
@@ -238,6 +245,9 @@ Makefile: jododial.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mksp
 		/usr/lib/qt/mkspecs/features/resources.prf \
 		/usr/lib/qt/mkspecs/features/moc.prf \
 		/usr/lib/qt/mkspecs/features/unix/opengl.prf \
+		/usr/lib/qt/mkspecs/features/dbuscommon.pri \
+		/usr/lib/qt/mkspecs/features/dbusinterfaces.prf \
+		/usr/lib/qt/mkspecs/features/dbusadaptors.prf \
 		/usr/lib/qt/mkspecs/features/uic.prf \
 		/usr/lib/qt/mkspecs/features/unix/thread.prf \
 		/usr/lib/qt/mkspecs/features/testcase_targets.prf \
@@ -247,6 +257,7 @@ Makefile: jododial.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mksp
 		jododial.pro \
 		jododial.qrc \
 		/lib/libQt5Widgets.prl \
+		/lib/libQt5DBus.prl \
 		/lib/libQt5Gui.prl \
 		/lib/libQt5Core.prl
 	$(QMAKE) -o Makefile jododial.pro
@@ -322,6 +333,9 @@ Makefile: jododial.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mksp
 /usr/lib/qt/mkspecs/features/resources.prf:
 /usr/lib/qt/mkspecs/features/moc.prf:
 /usr/lib/qt/mkspecs/features/unix/opengl.prf:
+/usr/lib/qt/mkspecs/features/dbuscommon.pri:
+/usr/lib/qt/mkspecs/features/dbusinterfaces.prf:
+/usr/lib/qt/mkspecs/features/dbusadaptors.prf:
 /usr/lib/qt/mkspecs/features/uic.prf:
 /usr/lib/qt/mkspecs/features/unix/thread.prf:
 /usr/lib/qt/mkspecs/features/testcase_targets.prf:
@@ -331,6 +345,7 @@ Makefile: jododial.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib/qt/mksp
 jododial.pro:
 jododial.qrc:
 /lib/libQt5Widgets.prl:
+/lib/libQt5DBus.prl:
 /lib/libQt5Gui.prl:
 /lib/libQt5Core.prl:
 qmake: FORCE
@@ -339,8 +354,8 @@ qmake: FORCE
 qmake_all: FORCE
 
 dist: 
-	@test -d build/jododial1.0.0 || mkdir -p build/jododial1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) build/jododial1.0.0/ && $(COPY_FILE) --parents jododial.qrc build/jododial1.0.0/ && $(COPY_FILE) --parents src/jododial.h build/jododial1.0.0/ && $(COPY_FILE) --parents src/jododial.cpp src/main.cpp build/jododial1.0.0/ && (cd `dirname build/jododial1.0.0` && $(TAR) jododial1.0.0.tar jododial1.0.0 && $(COMPRESS) jododial1.0.0.tar) && $(MOVE) `dirname build/jododial1.0.0`/jododial1.0.0.tar.gz . && $(DEL_FILE) -r build/jododial1.0.0
+	@test -d build/obj/jododial1.0.0 || mkdir -p build/obj/jododial1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) build/obj/jododial1.0.0/ && $(COPY_FILE) --parents jododial.qrc build/obj/jododial1.0.0/ && $(COPY_FILE) --parents src/ussd_handler.h src/jododial.h build/obj/jododial1.0.0/ && $(COPY_FILE) --parents src/ussd_handler.cpp src/jododial.cpp src/main.cpp build/obj/jododial1.0.0/ && (cd `dirname build/obj/jododial1.0.0` && $(TAR) jododial1.0.0.tar jododial1.0.0 && $(COMPRESS) jododial1.0.0.tar) && $(MOVE) `dirname build/obj/jododial1.0.0`/jododial1.0.0.tar.gz . && $(DEL_FILE) -r build/obj/jododial1.0.0
 
 
 clean:compiler_clean 
@@ -361,17 +376,78 @@ mocables: compiler_moc_header_make_all compiler_moc_source_make_all
 
 check: first
 
-compiler_rcc_make_all: build/qrc_jododial.cpp
+compiler_rcc_make_all: qrc_jododial.cpp
 compiler_rcc_clean:
-	-$(DEL_FILE) build/qrc_jododial.cpp
-build/qrc_jododial.cpp: jododial.qrc \
+	-$(DEL_FILE) qrc_jododial.cpp
+qrc_jododial.cpp: jododial.qrc \
 		Jododial.png
-	/usr/lib/qt/bin/rcc -name jododial jododial.qrc -o build/qrc_jododial.cpp
+	/usr/lib/qt/bin/rcc -name jododial jododial.qrc -o qrc_jododial.cpp
 
-compiler_moc_header_make_all: build/moc_jododial.cpp
+compiler_moc_header_make_all: build/moc/moc_ussd_handler.cpp build/moc/moc_jododial.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) build/moc_jododial.cpp
-build/moc_jododial.cpp: /usr/include/qt/QtWidgets/QWidget \
+	-$(DEL_FILE) build/moc/moc_ussd_handler.cpp build/moc/moc_jododial.cpp
+build/moc/moc_ussd_handler.cpp: /usr/include/qt/QtCore/QObject \
+		/usr/include/qt/QtCore/qobject.h \
+		/usr/include/qt/QtCore/qobjectdefs.h \
+		/usr/include/qt/QtCore/qnamespace.h \
+		/usr/include/qt/QtCore/qglobal.h \
+		/usr/include/qt/QtCore/qconfig.h \
+		/usr/include/qt/QtCore/qfeatures.h \
+		/usr/include/qt/QtCore/qsystemdetection.h \
+		/usr/include/qt/QtCore/qprocessordetection.h \
+		/usr/include/qt/QtCore/qcompilerdetection.h \
+		/usr/include/qt/QtCore/qglobalstatic.h \
+		/usr/include/qt/QtCore/qatomic.h \
+		/usr/include/qt/QtCore/qbasicatomic.h \
+		/usr/include/qt/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt/QtCore/qgenericatomic.h \
+		/usr/include/qt/QtCore/qatomic_msvc.h \
+		/usr/include/qt/QtCore/qatomic_integrity.h \
+		/usr/include/qt/QtCore/qoldbasicatomic.h \
+		/usr/include/qt/QtCore/qatomic_vxworks.h \
+		/usr/include/qt/QtCore/qatomic_power.h \
+		/usr/include/qt/QtCore/qatomic_alpha.h \
+		/usr/include/qt/QtCore/qatomic_armv7.h \
+		/usr/include/qt/QtCore/qatomic_armv6.h \
+		/usr/include/qt/QtCore/qatomic_armv5.h \
+		/usr/include/qt/QtCore/qatomic_bfin.h \
+		/usr/include/qt/QtCore/qatomic_ia64.h \
+		/usr/include/qt/QtCore/qatomic_mips.h \
+		/usr/include/qt/QtCore/qatomic_s390.h \
+		/usr/include/qt/QtCore/qatomic_sh4a.h \
+		/usr/include/qt/QtCore/qatomic_sparc.h \
+		/usr/include/qt/QtCore/qatomic_x86.h \
+		/usr/include/qt/QtCore/qatomic_cxx11.h \
+		/usr/include/qt/QtCore/qatomic_gcc.h \
+		/usr/include/qt/QtCore/qatomic_unix.h \
+		/usr/include/qt/QtCore/qmutex.h \
+		/usr/include/qt/QtCore/qlogging.h \
+		/usr/include/qt/QtCore/qflags.h \
+		/usr/include/qt/QtCore/qtypeinfo.h \
+		/usr/include/qt/QtCore/qtypetraits.h \
+		/usr/include/qt/QtCore/qsysinfo.h \
+		/usr/include/qt/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt/QtCore/qstring.h \
+		/usr/include/qt/QtCore/qchar.h \
+		/usr/include/qt/QtCore/qbytearray.h \
+		/usr/include/qt/QtCore/qrefcount.h \
+		/usr/include/qt/QtCore/qarraydata.h \
+		/usr/include/qt/QtCore/qstringbuilder.h \
+		/usr/include/qt/QtCore/qlist.h \
+		/usr/include/qt/QtCore/qalgorithms.h \
+		/usr/include/qt/QtCore/qiterator.h \
+		/usr/include/qt/QtCore/qcoreevent.h \
+		/usr/include/qt/QtCore/qscopedpointer.h \
+		/usr/include/qt/QtCore/qmetatype.h \
+		/usr/include/qt/QtCore/qvarlengtharray.h \
+		/usr/include/qt/QtCore/qcontainerfwd.h \
+		/usr/include/qt/QtCore/qisenum.h \
+		/usr/include/qt/QtCore/qobject_impl.h \
+		/usr/include/qt/QtCore/QString \
+		src/ussd_handler.h
+	/usr/lib/qt/bin/moc $(DEFINES) $(INCPATH) -I/usr/lib/gcc/include/c++/4.8.2 -I/usr/lib/gcc/include/c++/4.8.2/i686-pc-linux-gnu -I/usr/lib/gcc/include/c++/4.8.2/backward -I/usr/lib/gcc/i686-pc-linux-gnu/4.8.2/include -I/usr/local/include -I/usr/lib/gcc/i686-pc-linux-gnu/4.8.2/include-fixed -I/usr/include src/ussd_handler.h -o build/moc/moc_ussd_handler.cpp
+
+build/moc/moc_jododial.cpp: /usr/include/qt/QtWidgets/QWidget \
 		/usr/include/qt/QtWidgets/qwidget.h \
 		/usr/include/qt/QtGui/qwindowdefs.h \
 		/usr/include/qt/QtCore/qglobal.h \
@@ -498,8 +574,6 @@ build/moc_jododial.cpp: /usr/include/qt/QtWidgets/QWidget \
 		/usr/include/qt/QtGui/qglyphrun.h \
 		/usr/include/qt/QtGui/qrawfont.h \
 		/usr/include/qt/QtGui/qfontdatabase.h \
-		/usr/include/qt/QtCore/QProcess \
-		/usr/include/qt/QtCore/qprocess.h \
 		/usr/include/qt/QtWidgets/QComboBox \
 		/usr/include/qt/QtWidgets/qcombobox.h \
 		/usr/include/qt/QtWidgets/qabstractitemdelegate.h \
@@ -514,6 +588,10 @@ build/moc_jododial.cpp: /usr/include/qt/QtWidgets/QWidget \
 		/usr/include/qt/QtWidgets/qtabwidget.h \
 		/usr/include/qt/QtWidgets/qrubberband.h \
 		/usr/include/qt/QtCore/qabstractitemmodel.h \
+		/usr/include/qt/QtWidgets/QLineEdit \
+		/usr/include/qt/QtWidgets/qlineedit.h \
+		/usr/include/qt/QtCore/QProcess \
+		/usr/include/qt/QtCore/qprocess.h \
 		/usr/include/qt/QtWidgets/QMenu \
 		/usr/include/qt/QtWidgets/qmenu.h \
 		/usr/include/qt/QtWidgets/qaction.h \
@@ -521,7 +599,7 @@ build/moc_jododial.cpp: /usr/include/qt/QtWidgets/QWidget \
 		/usr/include/qt/QtWidgets/QSystemTrayIcon \
 		/usr/include/qt/QtWidgets/qsystemtrayicon.h \
 		src/jododial.h
-	/usr/lib/qt/bin/moc $(DEFINES) $(INCPATH) -I/usr/lib/gcc/include/c++/4.8.2 -I/usr/lib/gcc/include/c++/4.8.2/i686-pc-linux-gnu -I/usr/lib/gcc/include/c++/4.8.2/backward -I/usr/lib/gcc/i686-pc-linux-gnu/4.8.2/include -I/usr/local/include -I/usr/lib/gcc/i686-pc-linux-gnu/4.8.2/include-fixed -I/usr/include src/jododial.h -o build/moc_jododial.cpp
+	/usr/lib/qt/bin/moc $(DEFINES) $(INCPATH) -I/usr/lib/gcc/include/c++/4.8.2 -I/usr/lib/gcc/include/c++/4.8.2/i686-pc-linux-gnu -I/usr/lib/gcc/include/c++/4.8.2/backward -I/usr/lib/gcc/i686-pc-linux-gnu/4.8.2/include -I/usr/local/include -I/usr/lib/gcc/i686-pc-linux-gnu/4.8.2/include-fixed -I/usr/include src/jododial.h -o build/moc/moc_jododial.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -537,7 +615,225 @@ compiler_clean: compiler_rcc_clean compiler_moc_header_clean
 
 ####### Compile
 
-build/jododial.o: src/jododial.cpp src/jododial.h \
+build/obj/ussd_handler.o: src/ussd_handler.cpp src/ussd_handler.h \
+		/usr/include/qt/QtCore/QObject \
+		/usr/include/qt/QtCore/qobject.h \
+		/usr/include/qt/QtCore/qobjectdefs.h \
+		/usr/include/qt/QtCore/qnamespace.h \
+		/usr/include/qt/QtCore/qglobal.h \
+		/usr/include/qt/QtCore/qconfig.h \
+		/usr/include/qt/QtCore/qfeatures.h \
+		/usr/include/qt/QtCore/qsystemdetection.h \
+		/usr/include/qt/QtCore/qprocessordetection.h \
+		/usr/include/qt/QtCore/qcompilerdetection.h \
+		/usr/include/qt/QtCore/qglobalstatic.h \
+		/usr/include/qt/QtCore/qatomic.h \
+		/usr/include/qt/QtCore/qbasicatomic.h \
+		/usr/include/qt/QtCore/qatomic_bootstrap.h \
+		/usr/include/qt/QtCore/qgenericatomic.h \
+		/usr/include/qt/QtCore/qatomic_msvc.h \
+		/usr/include/qt/QtCore/qatomic_integrity.h \
+		/usr/include/qt/QtCore/qoldbasicatomic.h \
+		/usr/include/qt/QtCore/qatomic_vxworks.h \
+		/usr/include/qt/QtCore/qatomic_power.h \
+		/usr/include/qt/QtCore/qatomic_alpha.h \
+		/usr/include/qt/QtCore/qatomic_armv7.h \
+		/usr/include/qt/QtCore/qatomic_armv6.h \
+		/usr/include/qt/QtCore/qatomic_armv5.h \
+		/usr/include/qt/QtCore/qatomic_bfin.h \
+		/usr/include/qt/QtCore/qatomic_ia64.h \
+		/usr/include/qt/QtCore/qatomic_mips.h \
+		/usr/include/qt/QtCore/qatomic_s390.h \
+		/usr/include/qt/QtCore/qatomic_sh4a.h \
+		/usr/include/qt/QtCore/qatomic_sparc.h \
+		/usr/include/qt/QtCore/qatomic_x86.h \
+		/usr/include/qt/QtCore/qatomic_cxx11.h \
+		/usr/include/qt/QtCore/qatomic_gcc.h \
+		/usr/include/qt/QtCore/qatomic_unix.h \
+		/usr/include/qt/QtCore/qmutex.h \
+		/usr/include/qt/QtCore/qlogging.h \
+		/usr/include/qt/QtCore/qflags.h \
+		/usr/include/qt/QtCore/qtypeinfo.h \
+		/usr/include/qt/QtCore/qtypetraits.h \
+		/usr/include/qt/QtCore/qsysinfo.h \
+		/usr/include/qt/QtCore/qobjectdefs_impl.h \
+		/usr/include/qt/QtCore/qstring.h \
+		/usr/include/qt/QtCore/qchar.h \
+		/usr/include/qt/QtCore/qbytearray.h \
+		/usr/include/qt/QtCore/qrefcount.h \
+		/usr/include/qt/QtCore/qarraydata.h \
+		/usr/include/qt/QtCore/qstringbuilder.h \
+		/usr/include/qt/QtCore/qlist.h \
+		/usr/include/qt/QtCore/qalgorithms.h \
+		/usr/include/qt/QtCore/qiterator.h \
+		/usr/include/qt/QtCore/qcoreevent.h \
+		/usr/include/qt/QtCore/qscopedpointer.h \
+		/usr/include/qt/QtCore/qmetatype.h \
+		/usr/include/qt/QtCore/qvarlengtharray.h \
+		/usr/include/qt/QtCore/qcontainerfwd.h \
+		/usr/include/qt/QtCore/qisenum.h \
+		/usr/include/qt/QtCore/qobject_impl.h \
+		/usr/include/qt/QtCore/QString \
+		/usr/include/qt/QtDBus/QtDBus \
+		/usr/include/qt/QtDBus/QtDBusDepends \
+		/usr/include/qt/QtCore/QtCore \
+		/usr/include/qt/QtCore/QtCoreDepends \
+		/usr/include/qt/QtCore/qabstractanimation.h \
+		/usr/include/qt/QtCore/qanimationgroup.h \
+		/usr/include/qt/QtCore/qparallelanimationgroup.h \
+		/usr/include/qt/QtCore/qpauseanimation.h \
+		/usr/include/qt/QtCore/qpropertyanimation.h \
+		/usr/include/qt/QtCore/qvariantanimation.h \
+		/usr/include/qt/QtCore/qeasingcurve.h \
+		/usr/include/qt/QtCore/qvector.h \
+		/usr/include/qt/QtCore/qpoint.h \
+		/usr/include/qt/QtCore/qvariant.h \
+		/usr/include/qt/QtCore/qmap.h \
+		/usr/include/qt/QtCore/qpair.h \
+		/usr/include/qt/QtCore/qdebug.h \
+		/usr/include/qt/QtCore/qhash.h \
+		/usr/include/qt/QtCore/qtextstream.h \
+		/usr/include/qt/QtCore/qiodevice.h \
+		/usr/include/qt/QtCore/qlocale.h \
+		/usr/include/qt/QtCore/qshareddata.h \
+		/usr/include/qt/QtCore/qset.h \
+		/usr/include/qt/QtCore/qcontiguouscache.h \
+		/usr/include/qt/QtCore/qstringlist.h \
+		/usr/include/qt/QtCore/qdatastream.h \
+		/usr/include/qt/QtCore/qregexp.h \
+		/usr/include/qt/QtCore/qstringmatcher.h \
+		/usr/include/qt/QtCore/qsequentialanimationgroup.h \
+		/usr/include/qt/QtCore/qtextcodec.h \
+		/usr/include/qt/QtCore/qendian.h \
+		/usr/include/qt/QtCore/qlibraryinfo.h \
+		/usr/include/qt/QtCore/qdatetime.h \
+		/usr/include/qt/QtCore/qsharedpointer.h \
+		/usr/include/qt/QtCore/qsharedpointer_impl.h \
+		/usr/include/qt/QtCore/qnumeric.h \
+		/usr/include/qt/QtCore/qbuffer.h \
+		/usr/include/qt/QtCore/qdir.h \
+		/usr/include/qt/QtCore/qfileinfo.h \
+		/usr/include/qt/QtCore/qfile.h \
+		/usr/include/qt/QtCore/qfiledevice.h \
+		/usr/include/qt/QtCore/qdiriterator.h \
+		/usr/include/qt/QtCore/qfileselector.h \
+		/usr/include/qt/QtCore/QStringList \
+		/usr/include/qt/QtCore/qfilesystemwatcher.h \
+		/usr/include/qt/QtCore/qlockfile.h \
+		/usr/include/qt/QtCore/qloggingcategory.h \
+		/usr/include/qt/QtCore/qprocess.h \
+		/usr/include/qt/QtCore/qresource.h \
+		/usr/include/qt/QtCore/qsavefile.h \
+		/usr/include/qt/QtCore/qsettings.h \
+		/usr/include/qt/QtCore/qstandardpaths.h \
+		/usr/include/qt/QtCore/qtemporarydir.h \
+		/usr/include/qt/QtCore/QScopedPointer \
+		/usr/include/qt/QtCore/qtemporaryfile.h \
+		/usr/include/qt/QtCore/qurl.h \
+		/usr/include/qt/QtCore/qurlquery.h \
+		/usr/include/qt/QtCore/qabstractitemmodel.h \
+		/usr/include/qt/QtCore/qabstractproxymodel.h \
+		/usr/include/qt/QtCore/qidentityproxymodel.h \
+		/usr/include/qt/QtCore/qitemselectionmodel.h \
+		/usr/include/qt/QtCore/qsortfilterproxymodel.h \
+		/usr/include/qt/QtCore/qstringlistmodel.h \
+		/usr/include/qt/QtCore/qjsonarray.h \
+		/usr/include/qt/QtCore/qjsonvalue.h \
+		/usr/include/qt/QtCore/qjsondocument.h \
+		/usr/include/qt/QtCore/qjsonobject.h \
+		/usr/include/qt/QtCore/qabstracteventdispatcher.h \
+		/usr/include/qt/QtCore/qeventloop.h \
+		/usr/include/qt/QtCore/qabstractnativeeventfilter.h \
+		/usr/include/qt/QtCore/qbasictimer.h \
+		/usr/include/qt/QtCore/qcoreapplication.h \
+		/usr/include/qt/QtCore/qmath.h \
+		/usr/include/qt/QtCore/qmetaobject.h \
+		/usr/include/qt/QtCore/qmimedata.h \
+		/usr/include/qt/QtCore/qobjectcleanuphandler.h \
+		/usr/include/qt/QtCore/qpointer.h \
+		/usr/include/qt/QtCore/qsharedmemory.h \
+		/usr/include/qt/QtCore/qsignalmapper.h \
+		/usr/include/qt/QtCore/qsocketnotifier.h \
+		/usr/include/qt/QtCore/qsystemsemaphore.h \
+		/usr/include/qt/QtCore/qtimer.h \
+		/usr/include/qt/QtCore/qtranslator.h \
+		/usr/include/qt/QtCore/qwineventnotifier.h \
+		/usr/include/qt/QtCore/qmimedatabase.h \
+		/usr/include/qt/QtCore/qmimetype.h \
+		/usr/include/qt/QtCore/qfactoryinterface.h \
+		/usr/include/qt/QtCore/qlibrary.h \
+		/usr/include/qt/QtCore/qplugin.h \
+		/usr/include/qt/QtCore/qpluginloader.h \
+		/usr/include/qt/QtCore/quuid.h \
+		/usr/include/qt/QtCore/qabstractstate.h \
+		/usr/include/qt/QtCore/qabstracttransition.h \
+		/usr/include/qt/QtCore/qeventtransition.h \
+		/usr/include/qt/QtCore/qfinalstate.h \
+		/usr/include/qt/QtCore/qhistorystate.h \
+		/usr/include/qt/QtCore/qsignaltransition.h \
+		/usr/include/qt/QtCore/qstate.h \
+		/usr/include/qt/QtCore/qstatemachine.h \
+		/usr/include/qt/QtCore/qexception.h \
+		/usr/include/qt/QtCore/qfuture.h \
+		/usr/include/qt/QtCore/qfutureinterface.h \
+		/usr/include/qt/QtCore/qrunnable.h \
+		/usr/include/qt/QtCore/qresultstore.h \
+		/usr/include/qt/QtCore/qfuturesynchronizer.h \
+		/usr/include/qt/QtCore/qfuturewatcher.h \
+		/usr/include/qt/QtCore/qreadwritelock.h \
+		/usr/include/qt/QtCore/qsemaphore.h \
+		/usr/include/qt/QtCore/qthread.h \
+		/usr/include/qt/QtCore/qthreadpool.h \
+		/usr/include/qt/QtCore/qthreadstorage.h \
+		/usr/include/qt/QtCore/qwaitcondition.h \
+		/usr/include/qt/QtCore/qarraydataops.h \
+		/usr/include/qt/QtCore/qarraydatapointer.h \
+		/usr/include/qt/QtCore/qbitarray.h \
+		/usr/include/qt/QtCore/qbytearraymatcher.h \
+		/usr/include/qt/QtCore/qcache.h \
+		/usr/include/qt/QtCore/qcollator.h \
+		/usr/include/qt/QtCore/qcommandlineoption.h \
+		/usr/include/qt/QtCore/qcommandlineparser.h \
+		/usr/include/qt/QtCore/qcryptographichash.h \
+		/usr/include/qt/QtCore/qelapsedtimer.h \
+		/usr/include/qt/QtCore/qline.h \
+		/usr/include/qt/QtCore/qlinkedlist.h \
+		/usr/include/qt/QtCore/qmargins.h \
+		/usr/include/qt/QtCore/qrect.h \
+		/usr/include/qt/QtCore/qsize.h \
+		/usr/include/qt/QtCore/qmessageauthenticationcode.h \
+		/usr/include/qt/QtCore/qqueue.h \
+		/usr/include/qt/QtCore/qregularexpression.h \
+		/usr/include/qt/QtCore/qscopedvaluerollback.h \
+		/usr/include/qt/QtCore/qstack.h \
+		/usr/include/qt/QtCore/qtextboundaryfinder.h \
+		/usr/include/qt/QtCore/qtimeline.h \
+		/usr/include/qt/QtCore/qtimezone.h \
+		/usr/include/qt/QtCore/qxmlstream.h \
+		/usr/include/qt/QtCore/qtcoreversion.h \
+		/usr/include/qt/QtDBus/qdbusabstractadaptor.h \
+		/usr/include/qt/QtDBus/qdbusmacros.h \
+		/usr/include/qt/QtDBus/qdbusabstractinterface.h \
+		/usr/include/qt/QtDBus/qdbusmessage.h \
+		/usr/include/qt/QtDBus/qdbuserror.h \
+		/usr/include/qt/QtDBus/qdbusextratypes.h \
+		/usr/include/qt/QtDBus/qdbusconnection.h \
+		/usr/include/qt/QtDBus/qdbusargument.h \
+		/usr/include/qt/QtDBus/qdbusconnectioninterface.h \
+		/usr/include/qt/QtDBus/qdbusreply.h \
+		/usr/include/qt/QtDBus/qdbuspendingreply.h \
+		/usr/include/qt/QtDBus/qdbuspendingcall.h \
+		/usr/include/qt/QtDBus/qdbuscontext.h \
+		/usr/include/qt/QtDBus/qdbusinterface.h \
+		/usr/include/qt/QtDBus/qdbusmetatype.h \
+		/usr/include/qt/QtDBus/qdbusserver.h \
+		/usr/include/qt/QtDBus/qdbusservicewatcher.h \
+		/usr/include/qt/QtDBus/qdbusunixfiledescriptor.h \
+		/usr/include/qt/QtDBus/qdbusvirtualobject.h \
+		/usr/include/qt/QtDBus/qtdbusversion.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/ussd_handler.o src/ussd_handler.cpp
+
+build/obj/jododial.o: src/jododial.cpp src/jododial.h \
 		/usr/include/qt/QtWidgets/QWidget \
 		/usr/include/qt/QtWidgets/qwidget.h \
 		/usr/include/qt/QtGui/qwindowdefs.h \
@@ -665,8 +961,6 @@ build/jododial.o: src/jododial.cpp src/jododial.h \
 		/usr/include/qt/QtGui/qglyphrun.h \
 		/usr/include/qt/QtGui/qrawfont.h \
 		/usr/include/qt/QtGui/qfontdatabase.h \
-		/usr/include/qt/QtCore/QProcess \
-		/usr/include/qt/QtCore/qprocess.h \
 		/usr/include/qt/QtWidgets/QComboBox \
 		/usr/include/qt/QtWidgets/qcombobox.h \
 		/usr/include/qt/QtWidgets/qabstractitemdelegate.h \
@@ -681,6 +975,10 @@ build/jododial.o: src/jododial.cpp src/jododial.h \
 		/usr/include/qt/QtWidgets/qtabwidget.h \
 		/usr/include/qt/QtWidgets/qrubberband.h \
 		/usr/include/qt/QtCore/qabstractitemmodel.h \
+		/usr/include/qt/QtWidgets/QLineEdit \
+		/usr/include/qt/QtWidgets/qlineedit.h \
+		/usr/include/qt/QtCore/QProcess \
+		/usr/include/qt/QtCore/qprocess.h \
 		/usr/include/qt/QtWidgets/QMenu \
 		/usr/include/qt/QtWidgets/qmenu.h \
 		/usr/include/qt/QtWidgets/qaction.h \
@@ -709,10 +1007,13 @@ build/jododial.o: src/jododial.cpp src/jododial.h \
 		/usr/include/qt/QtCore/qsettings.h \
 		/usr/include/qt/QtWidgets/QCheckBox \
 		/usr/include/qt/QtWidgets/qcheckbox.h \
-		/usr/include/qt/QtCore/QTextStream
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/jododial.o src/jododial.cpp
+		/usr/include/qt/QtCore/QTextStream \
+		src/ussd_handler.h \
+		/usr/include/qt/QtCore/QObject \
+		/usr/include/qt/QtCore/QString
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/jododial.o src/jododial.cpp
 
-build/main.o: src/main.cpp src/jododial.h \
+build/obj/main.o: src/main.cpp src/jododial.h \
 		/usr/include/qt/QtWidgets/QWidget \
 		/usr/include/qt/QtWidgets/qwidget.h \
 		/usr/include/qt/QtGui/qwindowdefs.h \
@@ -840,8 +1141,6 @@ build/main.o: src/main.cpp src/jododial.h \
 		/usr/include/qt/QtGui/qglyphrun.h \
 		/usr/include/qt/QtGui/qrawfont.h \
 		/usr/include/qt/QtGui/qfontdatabase.h \
-		/usr/include/qt/QtCore/QProcess \
-		/usr/include/qt/QtCore/qprocess.h \
 		/usr/include/qt/QtWidgets/QComboBox \
 		/usr/include/qt/QtWidgets/qcombobox.h \
 		/usr/include/qt/QtWidgets/qabstractitemdelegate.h \
@@ -856,6 +1155,10 @@ build/main.o: src/main.cpp src/jododial.h \
 		/usr/include/qt/QtWidgets/qtabwidget.h \
 		/usr/include/qt/QtWidgets/qrubberband.h \
 		/usr/include/qt/QtCore/qabstractitemmodel.h \
+		/usr/include/qt/QtWidgets/QLineEdit \
+		/usr/include/qt/QtWidgets/qlineedit.h \
+		/usr/include/qt/QtCore/QProcess \
+		/usr/include/qt/QtCore/qprocess.h \
 		/usr/include/qt/QtWidgets/QMenu \
 		/usr/include/qt/QtWidgets/qmenu.h \
 		/usr/include/qt/QtWidgets/qaction.h \
@@ -869,13 +1172,16 @@ build/main.o: src/main.cpp src/jododial.h \
 		/usr/include/qt/QtWidgets/qdesktopwidget.h \
 		/usr/include/qt/QtGui/qguiapplication.h \
 		/usr/include/qt/QtGui/qinputmethod.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/main.o src/main.cpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/main.o src/main.cpp
 
-build/qrc_jododial.o: build/qrc_jododial.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/qrc_jododial.o build/qrc_jododial.cpp
+build/obj/qrc_jododial.o: qrc_jododial.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/qrc_jododial.o qrc_jododial.cpp
 
-build/moc_jododial.o: build/moc_jododial.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/moc_jododial.o build/moc_jododial.cpp
+build/obj/moc_ussd_handler.o: build/moc/moc_ussd_handler.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/moc_ussd_handler.o build/moc/moc_ussd_handler.cpp
+
+build/obj/moc_jododial.o: build/moc/moc_jododial.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/moc_jododial.o build/moc/moc_jododial.cpp
 
 ####### Install
 
