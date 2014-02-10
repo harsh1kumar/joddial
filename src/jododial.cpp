@@ -21,6 +21,7 @@
 
 #include <QLabel>
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QMessageBox>
 #include <QApplication>
 #include <QSettings>
@@ -37,10 +38,16 @@ Jododial::Jododial(QWidget * parent):
 	outputText = new QPlainTextEdit("");
 	outputText->setReadOnly(true);
 
+	/* Network row widgets */
+	QLabel * networkLabel = new QLabel(tr("Network Name :"));
+	networkLabel->setAlignment(Qt::AlignCenter);
 	networkCombo = new QComboBox;
 	networkCombo->setEditable(true);
-
 	connectButton = new QPushButton(tr("&Connect"));
+	QHBoxLayout * networkLayout = new QHBoxLayout;
+	networkLayout->addWidget(networkLabel);
+	networkLayout->addWidget(networkCombo);
+	networkLayout->addWidget(connectButton);
 
 	wvdialProc = new QProcess(this);
 
@@ -48,8 +55,7 @@ Jododial::Jododial(QWidget * parent):
 	QVBoxLayout * mainLayout = new QVBoxLayout;
 	mainLayout->addWidget(titleLabel);
 	mainLayout->addWidget(outputText);
-	mainLayout->addWidget(networkCombo);
-	mainLayout->addWidget(connectButton);
+	mainLayout->addLayout(networkLayout);
 	setLayout(mainLayout);
 
 	createSysTrayIcon();
@@ -243,7 +249,7 @@ void Jododial::readSettings()
 {
 	QSettings settings("jododial", "jododial");
 
-	QSize size = settings.value("size", QSize(400,200)).toSize();
+	QSize size = settings.value("size", QSize(400,250)).toSize();
 	QPoint pos = settings.value("pos", QPoint(400,200)).toPoint();
 	resize(size);
 	move(pos);
@@ -271,4 +277,3 @@ void Jododial::writeSettings()
 	settings.setValue("showMsgOnHide", showMsgOnHide);
 	settings.setValue("network", networkCombo->currentText());
 }
-

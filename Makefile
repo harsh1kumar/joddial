@@ -694,6 +694,7 @@ build/jododial.o: src/jododial.cpp src/jododial.h \
 		/usr/include/qt/QtWidgets/qlayout.h \
 		/usr/include/qt/QtWidgets/qlayoutitem.h \
 		/usr/include/qt/QtWidgets/qgridlayout.h \
+		/usr/include/qt/QtWidgets/QHBoxLayout \
 		/usr/include/qt/QtWidgets/QMessageBox \
 		/usr/include/qt/QtWidgets/qmessagebox.h \
 		/usr/include/qt/QtWidgets/qdialog.h \
