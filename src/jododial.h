@@ -42,6 +42,7 @@ private slots:
 	void printOutput();
 	void saveAndQuit();
 	void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
+	void toggleConnectButton();
 
 private:
 	/* Widgets */

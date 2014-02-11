@@ -3,4 +3,3 @@
 * disable button when sending uus command
 * ability to save ussd command in config
 * limit log in textbox
-* if QProcess finishes, rename the push button to connect

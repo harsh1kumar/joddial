@@ -81,6 +81,8 @@ Jododial::Jododial(QWidget * parent):
 	connect(connectButton, SIGNAL(clicked()), this, SLOT(connectDisconnect()));
 	connect(sendUssdButton, SIGNAL(clicked()), this, SLOT(sendUssd()));
 	connect(wvdialProc, SIGNAL(readyReadStandardOutput()), this, SLOT(printOutput()));
+	connect(wvdialProc, SIGNAL(started()), this, SLOT(toggleConnectButton()));
+	connect(wvdialProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(toggleConnectButton()));
 }
 
 /*
@@ -210,7 +212,6 @@ void Jododial::connectDisconnect()
 			/* Merging stdout & stderr into a single channel */
 			wvdialProc->setProcessChannelMode(QProcess::MergedChannels);
 			wvdialProc->start(prog, args);
-			connectButton->setText(tr("&Disconnect"));
 		}
 		else
 		{
@@ -222,7 +223,10 @@ void Jododial::connectDisconnect()
 	{
 		/* Disconnect */
 		wvdialProc->terminate();
-		connectButton->setText(tr("&Connect"));
+
+		/* Disable the button till the process actually ends. The button
+		 * will be enabled by a slot when finished() signal is emitted */
+		connectButton->setEnabled(false);
 	}
 }
 
@@ -233,6 +237,21 @@ void Jododial::printOutput()
 {
 	QString output = wvdialProc->readAll();
 	outputText->appendPlainText(output);
+}
+
+/*
+ * Toggles the name of connect button depending on the wvdialProc state
+ */
+void Jododial::toggleConnectButton()
+{
+	if (wvdialProc->state() == QProcess::Running)
+		connectButton->setText(tr("&Disconnect"));
+	else
+	{
+		connectButton->setText(tr("&Connect"));
+		connectButton->setEnabled(true);
+		outputText->appendPlainText("\n************ " + tr("Disconnected") + " ************\n\n");
+	}
 }
 
 /*
