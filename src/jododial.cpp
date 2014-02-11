@@ -275,6 +275,7 @@ void Jododial::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
  * 	Point/Position
  * 	showMsgOnHide - Show messageBox when minimizing to system tray or not
  * 	network - Current network in combo box
+ * 	ussdCommand - Current command in ussdCmdEdit
  */
 void Jododial::readSettings()
 {
@@ -295,6 +296,9 @@ void Jododial::readSettings()
 		// Network available in combo box
 		networkCombo->setCurrentIndex(index);
 	}
+
+	QString ussdCommand = settings.value("ussdCommand", "").toString();
+	ussdCmdEdit->setText(ussdCommand);
 }
 
 /*
@@ -307,6 +311,7 @@ void Jododial::writeSettings() const
 	settings.setValue("pos", pos());
 	settings.setValue("showMsgOnHide", showMsgOnHide);
 	settings.setValue("network", networkCombo->currentText());
+	settings.setValue("ussdCommand", ussdCmdEdit->text());
 }
 
 /*
