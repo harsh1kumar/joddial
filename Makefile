@@ -598,6 +598,9 @@ build/moc/moc_jododial.cpp: /usr/include/qt/QtWidgets/QWidget \
 		/usr/include/qt/QtWidgets/qactiongroup.h \
 		/usr/include/qt/QtWidgets/QSystemTrayIcon \
 		/usr/include/qt/QtWidgets/qsystemtrayicon.h \
+		src/ussd_handler.h \
+		/usr/include/qt/QtCore/QObject \
+		/usr/include/qt/QtCore/QString \
 		src/jododial.h
 	/usr/lib/qt/bin/moc $(DEFINES) $(INCPATH) -I/usr/lib/gcc/include/c++/4.8.2 -I/usr/lib/gcc/include/c++/4.8.2/i686-pc-linux-gnu -I/usr/lib/gcc/include/c++/4.8.2/backward -I/usr/lib/gcc/i686-pc-linux-gnu/4.8.2/include -I/usr/local/include -I/usr/lib/gcc/i686-pc-linux-gnu/4.8.2/include-fixed -I/usr/include src/jododial.h -o build/moc/moc_jododial.cpp
 
@@ -985,6 +988,9 @@ build/obj/jododial.o: src/jododial.cpp src/jododial.h \
 		/usr/include/qt/QtWidgets/qactiongroup.h \
 		/usr/include/qt/QtWidgets/QSystemTrayIcon \
 		/usr/include/qt/QtWidgets/qsystemtrayicon.h \
+		src/ussd_handler.h \
+		/usr/include/qt/QtCore/QObject \
+		/usr/include/qt/QtCore/QString \
 		/usr/include/qt/QtWidgets/QLabel \
 		/usr/include/qt/QtWidgets/qlabel.h \
 		/usr/include/qt/QtWidgets/QVBoxLayout \
@@ -1007,10 +1013,7 @@ build/obj/jododial.o: src/jododial.cpp src/jododial.h \
 		/usr/include/qt/QtCore/qsettings.h \
 		/usr/include/qt/QtWidgets/QCheckBox \
 		/usr/include/qt/QtWidgets/qcheckbox.h \
-		/usr/include/qt/QtCore/QTextStream \
-		src/ussd_handler.h \
-		/usr/include/qt/QtCore/QObject \
-		/usr/include/qt/QtCore/QString
+		/usr/include/qt/QtCore/QTextStream
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o build/obj/jododial.o src/jododial.cpp
 
 build/obj/main.o: src/main.cpp src/jododial.h \
@@ -1165,6 +1168,9 @@ build/obj/main.o: src/main.cpp src/jododial.h \
 		/usr/include/qt/QtWidgets/qactiongroup.h \
 		/usr/include/qt/QtWidgets/QSystemTrayIcon \
 		/usr/include/qt/QtWidgets/qsystemtrayicon.h \
+		src/ussd_handler.h \
+		/usr/include/qt/QtCore/QObject \
+		/usr/include/qt/QtCore/QString \
 		/usr/include/qt/QtWidgets/QApplication \
 		/usr/include/qt/QtWidgets/qapplication.h \
 		/usr/include/qt/QtCore/qcoreapplication.h \

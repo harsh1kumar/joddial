@@ -28,8 +28,6 @@
 #include <QCheckBox>
 #include <QTextStream>
 
-#include "ussd_handler.h"
-
 Jododial::Jododial(QWidget * parent):
 		QWidget(parent)
 {
@@ -316,11 +314,10 @@ void Jododial::writeSettings()
  */
 void Jododial::sendUssd()
 {
+	/* Read Command from line edit*/
 	QString ussdCommand = ussdCmdEdit->text();
-
-	UssdHandler u;
-	QString reply = u.sendCmd(ussdCommand);
-
+	/* Send command to ussd handler */
+	QString reply = uh.sendCmd(ussdCommand);
 	outputText->appendPlainText(reply + "\n");
 }
 

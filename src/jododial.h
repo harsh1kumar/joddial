@@ -29,6 +29,8 @@
 #include <QMenu>
 #include <QSystemTrayIcon>
 
+#include "ussd_handler.h"
+
 class Jododial : public QWidget
 {
 	Q_OBJECT
@@ -70,6 +72,7 @@ private:
 
 	/* Private variables*/
 	bool showMsgOnHide;
+	UssdHandler uh;
 };
 
 #endif // JODODIAL_H
