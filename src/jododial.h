@@ -40,11 +40,11 @@ public:
 
 private slots:
 	void connectDisconnect();
-	void sendUssd();
-	void printOutput();
-	void saveAndQuit();
+	void sendUssd() const;
+	void printOutput() const;
+	void saveAndQuit() const;
 	void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
-	void toggleConnectButton();
+	void toggleConnectButton() const;
 
 private:
 	/* Widgets */
@@ -67,7 +67,7 @@ private:
 	void createSysTrayIcon();
 	void closeEvent(QCloseEvent *event);
 	void readSettings();
-	void writeSettings();
+	void writeSettings() const;
 	void findNetworks();
 
 	/* Private variables*/

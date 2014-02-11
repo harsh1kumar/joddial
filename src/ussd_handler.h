@@ -31,17 +31,17 @@ public:
 	UssdHandler();
 	~UssdHandler() {};
 
-	QString sendCmd(const QString& command);
+	QString sendCmd(const QString& command) const;
 
 private:
 	/* Private data */
-	QString service;
+	const QString service;
+	const QString modemInterface;
+	const QString ussdInterface;
 	QString path;
-	QString modemInterface;
-	QString ussdInterface;
 
 	/* Private functions */
-	QString ussdCall(const QString& command);
+	QString ussdCall(const QString& command) const;
 };
 
 #endif // USSD_HANDLER_H

@@ -21,18 +21,18 @@
 
 #include <QtDBus>
 
-UssdHandler::UssdHandler()
+UssdHandler::UssdHandler() :
+	service("org.freedesktop.ModemManager1"),
+	modemInterface("org.freedesktop.ModemManager1.Modem"),
+	ussdInterface("org.freedesktop.ModemManager1.Modem.Modem3gpp.Ussd")
 {
-	service = "org.freedesktop.ModemManager1";
 	path = "/org/freedesktop/ModemManager1/Modem/0";
-	modemInterface = "org.freedesktop.ModemManager1.Modem";
-	ussdInterface = "org.freedesktop.ModemManager1.Modem.Modem3gpp.Ussd";
 }
 
 /*
  * Public interface to issue a USSD command
  */
-QString UssdHandler::sendCmd(const QString& command)
+QString UssdHandler::sendCmd(const QString& command) const
 {
 	if (!QDBusConnection::systemBus().isConnected())
 		return tr("Cannot connect to the D-Bus system bus.");
@@ -57,7 +57,7 @@ QString UssdHandler::sendCmd(const QString& command)
 /*
  * Actual function to issue DBus call for USSD command
  */
-QString UssdHandler::ussdCall(const QString& command)
+QString UssdHandler::ussdCall(const QString& command) const
 {
 	QDBusInterface busInterface(service, path, ussdInterface,
 				    QDBusConnection::systemBus());

@@ -184,7 +184,7 @@ void Jododial::closeEvent(QCloseEvent *event)
 /*
  * Write settings & quit Jododial
  */
-void Jododial::saveAndQuit()
+void Jododial::saveAndQuit() const
 {
 	writeSettings();
 	qApp->quit();
@@ -231,7 +231,7 @@ void Jododial::connectDisconnect()
 /*
  * Print output in text box
  */
-void Jododial::printOutput()
+void Jododial::printOutput() const
 {
 	QString output = wvdialProc->readAll();
 	outputText->appendPlainText(output);
@@ -240,7 +240,7 @@ void Jododial::printOutput()
 /*
  * Toggles the name of connect button depending on the wvdialProc state
  */
-void Jododial::toggleConnectButton()
+void Jododial::toggleConnectButton() const
 {
 	if (wvdialProc->state() == QProcess::Running)
 		connectButton->setText(tr("&Disconnect"));
@@ -300,7 +300,7 @@ void Jododial::readSettings()
 /*
  * Write settings to config file
  */
-void Jododial::writeSettings()
+void Jododial::writeSettings() const
 {
 	QSettings settings("jododial", "jododial");
 	settings.setValue("size", size());
@@ -312,7 +312,7 @@ void Jododial::writeSettings()
 /*
  * Send USSD command & print the reply
  */
-void Jododial::sendUssd()
+void Jododial::sendUssd() const
 {
 	/* Read Command from line edit*/
 	QString ussdCommand = ussdCmdEdit->text();
