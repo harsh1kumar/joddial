@@ -253,13 +253,13 @@ void Jododial::toggleConnectButton() const
 }
 
 /*
- * Behaviour of tray icon when it is double clicked
+ * Behaviour of tray icon when it is clicked or double-clicked
  * 	If Jododial is visible, hide it
  * 	If Jododial is hidden, show it.
  */
 void Jododial::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
-	if (reason == QSystemTrayIcon::DoubleClick)
+	if (reason == QSystemTrayIcon::Trigger || reason == QSystemTrayIcon::DoubleClick)
 	{
 		if (this->isVisible())
 			hide();
