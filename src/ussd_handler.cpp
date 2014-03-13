@@ -81,8 +81,8 @@ QString UssdHandler::sendCmd(const QString& command)
 				    QDBusConnection::systemBus());
 	if (!busInterface.isValid())
 		return tr("Error while sending USSD command: "
-			"DBus interface from Modem not valid");
-		/* TODO: Replace with - Maybe the modem is not connected. Please connect the modem & try again */
+			"Maybe the modem is not connected. "
+			"Please connect the modem & try again");
 
 	/* Enabling modem: Network-related operations are available now*/
 	busInterface.call("Enable", true);
