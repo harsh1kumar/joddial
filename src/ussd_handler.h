@@ -31,7 +31,7 @@ public:
 	UssdHandler();
 	~UssdHandler() {};
 
-	QString sendCmd(const QString& command) const;
+	QString sendCmd(const QString& command);
 
 private:
 	/* Private data */
@@ -41,6 +41,7 @@ private:
 	QString path;
 
 	/* Private functions */
+	void setModemPath();
 	QString ussdCall(const QString& command) const;
 };
 

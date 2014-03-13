@@ -317,7 +317,7 @@ void Jododial::writeSettings() const
 /*
  * Send USSD command & print the reply
  */
-void Jododial::sendUssd() const
+void Jododial::sendUssd()
 {
 	/* Read Command from line edit*/
 	QString ussdCommand = ussdCmdEdit->text();

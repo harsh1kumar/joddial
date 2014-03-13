@@ -1,4 +1,3 @@
 * ussd request on separate thread
-* dbus(ussd): path for correct modem number should be automatically detected
 * disable button when sending uus command
 * limit log in textbox

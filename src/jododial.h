@@ -40,7 +40,7 @@ public:
 
 private slots:
 	void connectDisconnect();
-	void sendUssd() const;
+	void sendUssd();
 	void printOutput() const;
 	void saveAndQuit() const;
 	void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
