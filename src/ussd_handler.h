@@ -35,9 +35,9 @@ public:
 
 private:
 	/* Private data */
-	const QString service;
-	const QString modemInterface;
-	const QString ussdInterface;
+	static const QString service;
+	static const QString modemInterface;
+	static const QString ussdInterface;
 	QString path;
 
 	/* Private functions */

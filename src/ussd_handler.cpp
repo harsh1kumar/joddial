@@ -21,10 +21,11 @@
 
 #include <QtDBus>
 
-UssdHandler::UssdHandler() :
-	service("org.freedesktop.ModemManager1"),
-	modemInterface("org.freedesktop.ModemManager1.Modem"),
-	ussdInterface("org.freedesktop.ModemManager1.Modem.Modem3gpp.Ussd")
+const QString UssdHandler::service = "org.freedesktop.ModemManager1";
+const QString UssdHandler::modemInterface = "org.freedesktop.ModemManager1.Modem";
+const QString UssdHandler::ussdInterface = "org.freedesktop.ModemManager1.Modem.Modem3gpp.Ussd";
+
+UssdHandler::UssdHandler()
 {
 }
 
