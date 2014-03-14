@@ -17,8 +17,7 @@
  * along with Jododial.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// #include "ussd_thread.h"
-#include "ussd_handler.h"
+#include "ussd_thread.h"
 
 #include <QtDBus>
 

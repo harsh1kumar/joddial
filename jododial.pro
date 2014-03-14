@@ -8,8 +8,8 @@ TARGET = jododial
 INCLUDEPATH += . src
 
 # Input
-HEADERS += src/ussd_handler.h src/jododial.h
-SOURCES += src/ussd_handler.cpp src/jododial.cpp src/main.cpp
+HEADERS += src/ussd_thread.h src/jododial.h
+SOURCES += src/ussd_thread.cpp src/jododial.cpp src/main.cpp
 RESOURCES += jododial.qrc
 
 # Output

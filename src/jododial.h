@@ -29,8 +29,7 @@
 #include <QMenu>
 #include <QSystemTrayIcon>
 
-// #include "ussd_thread.h"
-#include "ussd_handler.h"
+#include "ussd_thread.h"
 
 class Jododial : public QWidget
 {
