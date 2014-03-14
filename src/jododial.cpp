@@ -60,6 +60,7 @@ Jododial::Jododial(QWidget * parent):
 	ussdLayout->addWidget(sendUssdButton, 1);
 
 	wvdialProc = new QProcess(this);
+	uthread = new UssdThread;
 
 	/* Set layout */
 	QVBoxLayout * mainLayout = new QVBoxLayout;
@@ -81,6 +82,7 @@ Jododial::Jododial(QWidget * parent):
 	connect(wvdialProc, SIGNAL(readyReadStandardOutput()), this, SLOT(printOutput()));
 	connect(wvdialProc, SIGNAL(started()), this, SLOT(toggleConnectButton()));
 	connect(wvdialProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(toggleConnectButton()));
+	connect(uthread, SIGNAL(finished()), this, SLOT(displayUssdReply()));
 }
 
 /*
@@ -315,14 +317,27 @@ void Jododial::writeSettings() const
 }
 
 /*
- * Send USSD command & print the reply
+ * Send USSD command
+ * 	USSD thread will start
+ * 	sendUssdButton is disabled. It will be re-enabled when the thread finishes
  */
 void Jododial::sendUssd()
 {
-	/* Read Command from line edit*/
-	QString ussdCommand = ussdCmdEdit->text();
-	/* Send command to ussd handler */
-	QString reply = uh.sendCmd(ussdCommand);
-	outputText->appendPlainText(reply + "\n");
+	/* Read Command from line edit & start the ussd thread */
+	uthread->command = ussdCmdEdit->text();
+	uthread->start();
+
+	sendUssdButton->setText(tr("&Sending..."));
+	sendUssdButton->setEnabled(false);
 }
 
+/*
+ * Displays the reply available after USSD thread finishes
+ * sendUssdButton will be enabled
+ */
+void Jododial::displayUssdReply()
+{
+	outputText->appendPlainText(uthread->reply + "\n");
+	sendUssdButton->setText(tr("&Send"));
+	sendUssdButton->setEnabled(true);
+}

@@ -17,25 +17,26 @@
  * along with Jododial.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// #include "ussd_thread.h"
 #include "ussd_handler.h"
 
 #include <QtDBus>
 
-const QString UssdHandler::service = "org.freedesktop.ModemManager1";
-const QString UssdHandler::modemInterface = "org.freedesktop.ModemManager1.Modem";
-const QString UssdHandler::ussdInterface = "org.freedesktop.ModemManager1.Modem.Modem3gpp.Ussd";
+const QString UssdThread::service = "org.freedesktop.ModemManager1";
+const QString UssdThread::modemInterface = "org.freedesktop.ModemManager1.Modem";
+const QString UssdThread::ussdInterface = "org.freedesktop.ModemManager1.Modem.Modem3gpp.Ussd";
 
-UssdHandler::UssdHandler()
+UssdThread::UssdThread()
 {
 }
 
 /*
- * Find the DBus path of the modem & set UssdHandler::path to it.
+ * Find the DBus path of the modem & set UssdThread::path to it.
  *
  * 	A call to GetManagedObjects method of org.freedesktop.DBus.ObjectManager
  * 	interface will give the path in the output
  */
-void UssdHandler::setModemPath()
+void UssdThread::setModemPath()
 {
 	QDBusInterface busInterface(service,
 				"/org/freedesktop/ModemManager1",
@@ -68,49 +69,57 @@ void UssdHandler::setModemPath()
 }
 
 /*
- * Public interface to issue a USSD command
+ * Reimplementation of QThread run() function
  */
-QString UssdHandler::sendCmd(const QString& command)
+void UssdThread::run()
 {
 	if (!QDBusConnection::systemBus().isConnected())
-		return tr("Cannot connect to the D-Bus system bus.");
+	{
+		reply = tr("Error: Cannot connect to the D-Bus system bus.");
+		return;
+	}
 
 	setModemPath();
 
 	QDBusInterface busInterface(service, path, modemInterface,
 				    QDBusConnection::systemBus());
 	if (!busInterface.isValid())
-		return tr("Error while sending USSD command: "
+	{
+		reply = tr("Error while sending USSD command: "
 			"Maybe the modem is not connected. "
 			"Please connect the modem & try again");
+		return;
+	}
 
 	/* Enabling modem: Network-related operations are available now*/
 	busInterface.call("Enable", true);
 
-	QString reply = ussdCall(command);
+	ussdCall();
 
 	/* Disabling modem: Network-related operations are unavailable now*/
 	busInterface.call("Enable", false);
-
-	return reply;
 }
 
 /*
  * Actual function to issue DBus call for USSD command
  */
-QString UssdHandler::ussdCall(const QString& command) const
+void UssdThread::ussdCall()
 {
 	QDBusInterface busInterface(service, path, ussdInterface,
 				    QDBusConnection::systemBus());
 
 	if (!busInterface.isValid())
-		return tr("Error while sending USSD command: "
-			"DBus interface from Ussd not valid");
+	{
+		reply = tr("Error while sending USSD command: "
+			"Maybe the modem is not connected. "
+			"Please connect the modem & try again");
+		return;
+	}
 
-	QDBusReply<QString> reply = busInterface.call("Initiate", command);
-	if (!reply.isValid())
-		return (tr("Send Failed: ") + reply.error().message());
-
-	return reply.value();
+	/* Calling the DBus ussd method with command */
+	QDBusReply<QString> dbusReply = busInterface.call("Initiate", command);
+	if (!dbusReply.isValid())
+		reply = tr("Send Failed: ") + dbusReply.error().message();
+	else
+		reply = dbusReply.value();
 }
-

@@ -17,21 +17,22 @@
  * along with Jododial.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef USSD_HANDLER_H
-#define USSD_HANDLER_H
+#ifndef USSD_THREAD_H
+#define USSD_THREAD_H
 
-#include <QObject>
+#include <QThread>
 #include <QString>
 
-class UssdHandler : public QObject
+class UssdThread : public QThread
 {
 	Q_OBJECT
 
 public:
-	UssdHandler();
-	~UssdHandler() {};
+	UssdThread();
 
-	QString sendCmd(const QString& command);
+	QString command;
+	QString reply;
+	void run();
 
 private:
 	/* Private data */
@@ -42,7 +43,7 @@ private:
 
 	/* Private functions */
 	void setModemPath();
-	QString ussdCall(const QString& command) const;
+	void ussdCall();
 };
 
-#endif // USSD_HANDLER_H
+#endif // USSD_THREAD_H

@@ -29,6 +29,7 @@
 #include <QMenu>
 #include <QSystemTrayIcon>
 
+// #include "ussd_thread.h"
 #include "ussd_handler.h"
 
 class Jododial : public QWidget
@@ -45,6 +46,7 @@ private slots:
 	void saveAndQuit() const;
 	void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
 	void toggleConnectButton() const;
+	void displayUssdReply();
 
 private:
 	/* Widgets */
@@ -72,7 +74,7 @@ private:
 
 	/* Private variables*/
 	bool showMsgOnHide;
-	UssdHandler uh;
+	UssdThread * uthread;
 };
 
 #endif // JODODIAL_H
